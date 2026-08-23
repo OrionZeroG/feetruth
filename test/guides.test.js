@@ -42,6 +42,29 @@ const amzPage = read("guides/amazon-fba-calculator.html");
 const index = read("index.html");
 const sitemap = read("sitemap.xml");
 
+const GSC_META = '<meta name="google-site-verification" content="FA61oJtBHolei19M53Q5c3lcyUGa_Wp4abpnqE888b4" />';
+const htmlPages = [
+  "index.html",
+  "changelog.html",
+  "sources.html",
+  "workbook.html",
+  "guides/etsy-fee-calculator.html",
+  "guides/amazon-fba-calculator.html",
+  "guides/etsy-offsite-ads.html",
+  "guides/amazon-fba-fuel-surcharge-2026.html"
+];
+
+check("Google Search Console verification meta is exact on every HTML page", () => {
+  htmlPages.forEach((file) => {
+    const html = read(file);
+    assertContains(html, GSC_META, file);
+    const tokens = [...html.matchAll(/name="google-site-verification"[^>]*content="([^"]*)"/g)].map((m) => m[1]);
+    tokens.forEach((token) => {
+      assert.strictEqual(token, "FA61oJtBHolei19M53Q5c3lcyUGa_Wp4abpnqE888b4", `${file} must not invent a different token`);
+    });
+  });
+});
+
 check("homepage and sitemap wire both explainers", () => {
   assertContains(index, "guides/etsy-fee-calculator.html", "homepage");
   assertContains(index, "guides/amazon-fba-calculator.html", "homepage");
