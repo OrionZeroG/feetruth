@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FeeTruth — seller workbook</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app">
+    <h1><span>FeeTruth</span></h1>
+    <nav>
+      <a href="index.html">Calculator</a>
+      <a href="changelog.html">2026 changelog</a>
+      <a href="sources.html">Sources</a>
+      <a href="workbook.html" aria-current="page">Seller workbook</a>
+    </nav>
+  </header>
+  <article class="wrap">
+    <h1>Seller workbook (offline)</h1>
+    <p class="lede">A Google-Sheet-compatible CSV template. Free, not for sale, not a live hosted product.</p>
+    <p><a class="btn" data-workbook href="data/workbook-template.csv" download="feetruth-seller-workbook.csv">Download CSV template</a></p>
+
+    <h2>How to use</h2>
+    <ol>
+      <li>Open the CSV in Google Sheets, LibreOffice, or Excel (File → Import).</li>
+      <li>One row per SKU / listing. Keep marketplace and currency in the dedicated columns.</li>
+      <li>Paste official fees from Etsy Payment account or Amazon Fee Preview when they differ from FeeTruth.</li>
+      <li>Do not put passwords, API keys, or customer PII in this file.</li>
+    </ol>
+
+    <h2>Column spec</h2>
+    <table class="plain">
+      <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><code>sku</code></td><td>Your internal SKU</td></tr>
+        <tr><td><code>marketplace</code></td><td><code>etsy</code> or <code>amazon_us_fba</code></td></tr>
+        <tr><td><code>title</code></td><td>Listing title</td></tr>
+        <tr><td><code>list_price</code></td><td>Displayed item price</td></tr>
+        <tr><td><code>shipping_charged</code></td><td>What the buyer pays for shipping</td></tr>
+        <tr><td><code>gift_wrap_charged</code></td><td>Gift wrap charged, if any</td></tr>
+        <tr><td><code>cogs</code></td><td>Unit product cost</td></tr>
+        <tr><td><code>your_fulfillment_cost</code></td><td>Label / inbound / other cash cost you pay</td></tr>
+        <tr><td><code>etsy_ads_mode</code></td><td><code>off</code> / <code>15</code> / <code>12</code></td></tr>
+        <tr><td><code>amazon_category</code></td><td>Fee category name from sell.amazon.com/pricing</td></tr>
+        <tr><td><code>length_in, width_in, height_in, weight_lb</code></td><td>Packaged dimensions</td></tr>
+        <tr><td><code>sc_fulfillment_fee</code></td><td>Paste Seller Central fulfillment fee (authoritative)</td></tr>
+        <tr><td><code>ppc_per_unit</code></td><td>Your ad spend per unit</td></tr>
+        <tr><td><code>source_url</code></td><td>Official page you last checked</td></tr>
+        <tr><td><code>last_verified</code></td><td>ISO date you last confirmed the fee</td></tr>
+        <tr><td><code>notes</code></td><td>Variance vs FeeTruth</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Suggested Sheet formulas (after import): revenue = list_price+shipping_charged+gift_wrap_charged. Leave fee math in FeeTruth or replace with statement figures.</p>
+  </article>
+  <footer>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments and Amazon Seller Central.</p>
+    <div class="analytics" id="analytics"></div>
+  </footer>
+  <script src="js/fees.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

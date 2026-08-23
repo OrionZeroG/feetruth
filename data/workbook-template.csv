@@ -1,0 +1,3 @@
+sku,marketplace,title,list_price,shipping_charged,gift_wrap_charged,cogs,your_fulfillment_cost,etsy_ads_mode,amazon_category,length_in,width_in,height_in,weight_lb,sc_fulfillment_fee,ppc_per_unit,source_url,last_verified,notes
+EXAMPLE-ETSY-01,etsy,Ceramic mug,48.00,6.50,0,14.00,4.20,off,,,,,,,0,https://www.etsy.com/legal/fees,2026-08-22,Listing 0.20 + 6.5% + US processing
+EXAMPLE-AMZ-01,amazon_us_fba,Kitchen silicone brush,24.99,0,0,7.50,0,,Home and Kitchen,8,6,2,0.55,,0,https://sell.amazon.com/pricing,2026-08-22,Paste SC fulfillment into sc_fulfillment_fee

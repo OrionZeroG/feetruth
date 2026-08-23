@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FeeTruth — marketplace fee calculator</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app">
+    <h1><span>FeeTruth</span></h1>
+    <nav>
+      <a href="index.html" aria-current="page">Calculator</a>
+      <a href="changelog.html">2026 changelog</a>
+      <a href="sources.html">Sources</a>
+      <a href="workbook.html">Seller workbook</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <p class="lede">Current fees. Transparent math. Cited sources.</p>
+    <p class="trust">Free · No signup · Itemized · Public sources</p>
+    <div class="banner">
+      Free calculator — no account. Itemized lines show the math. Sources and last-verified dates are public.
+      Last verified <strong>22 Aug 2026</strong>. Lines we could not pull from an official public table are marked <span class="chip estimate">estimate</span>.
+      Figures follow cited official rules where marked <span class="chip verified">verified</span>; they are not a guarantee of your statement.
+    </div>
+    <p class="note">Etsy: calculations follow cited current official fee rules where lines are marked VERIFIED. Confirm on your Etsy Payments statement.</p>
+
+    <div class="tabs" role="tablist">
+      <button type="button" data-tab="etsy" aria-selected="true">Etsy US / UK processing</button>
+      <button type="button" data-tab="amazon" aria-selected="false">Amazon US FBA</button>
+    </div>
+
+    <section data-panel="etsy">
+      <div class="grid">
+        <form class="card" id="etsy-form">
+          <h2>Etsy order</h2>
+          <label class="f" for="e-region">Seller bank location (processing table)</label>
+          <select id="e-region">
+            <option value="US">United States — 3% + $0.25 (official)</option>
+            <option value="UK">United Kingdom — 4% + £0.20 (official)</option>
+          </select>
+          <div class="row2">
+            <div>
+              <label class="f" for="e-item">Item price</label>
+              <input id="e-item" type="number" step="0.01" min="0" value="48.00" />
+            </div>
+            <div>
+              <label class="f" for="e-qty">Quantity</label>
+              <input id="e-qty" type="number" step="1" min="1" value="1" />
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="f" for="e-ship">Shipping charged to buyer</label>
+              <input id="e-ship" type="number" step="0.01" min="0" value="6.50" />
+            </div>
+            <div>
+              <label class="f" for="e-gift">Gift wrap charged</label>
+              <input id="e-gift" type="number" step="0.01" min="0" value="0" />
+            </div>
+          </div>
+          <label class="f" for="e-tax">Tax on the order (processing base only; US transaction fee excludes tax)</label>
+          <input id="e-tax" type="number" step="0.01" min="0" value="0" />
+          <div class="row2">
+            <div>
+              <label class="f" for="e-cogs">COGS / unit</label>
+              <input id="e-cogs" type="number" step="0.01" min="0" value="14.00" />
+            </div>
+            <div>
+              <label class="f" for="e-shipcost">Your ship / supply cost / unit</label>
+              <input id="e-shipcost" type="number" step="0.01" min="0" value="4.20" />
+            </div>
+          </div>
+          <label class="f" for="e-ads">Offsite Ads (only if this order is attributed)</label>
+          <select id="e-ads">
+            <option value="off">None — not an attributed Offsite Ad</option>
+            <option value="15">15% — shop never hit $10k in any trailing 365 days</option>
+            <option value="12">12% — shop has ever hit $10k trailing 365-day</option>
+          </select>
+          <div class="checks">
+            <label><input id="e-listing" type="checkbox" checked /> Include $0.20 listing / unit (auto-renews on multi-qty sales)</label>
+            <label><input id="e-pattern" type="checkbox" /> Pattern $15/mo (overhead, not a per-order fee)</label>
+            <label><input id="e-plus" type="checkbox" /> Etsy Plus $10/mo (overhead; includes listing credits — not modeled)</label>
+            <label><input id="e-alloc" type="checkbox" /> Allocate checked subscriptions across monthly orders</label>
+          </div>
+          <label class="f" for="e-orders">Orders this month (for subscription allocation)</label>
+          <input id="e-orders" type="number" min="1" step="1" value="40" />
+          <div id="e-vat-wrap" hidden>
+            <div class="checks">
+              <label><input id="e-vat" type="checkbox" /> Add 20% VAT on Etsy service fees (UK) — <span class="chip estimate">estimate</span> confirm on your statement</label>
+            </div>
+          </div>
+          <label class="f" for="e-target">Target net margin (% of item+shipping+gift wrap)</label>
+          <input id="e-target" type="number" step="0.1" value="20" />
+          <p style="margin-top:1rem"><button type="submit">Calculate Etsy</button></p>
+          <p class="note" id="e-fx-note"></p>
+        </form>
+        <div class="card">
+          <h2>Etsy breakdown</h2>
+          <table class="out-table">
+            <thead><tr><th>Line</th><th class="amt">Amount</th></tr></thead>
+            <tbody id="e-lines"></tbody>
+          </table>
+          <div class="totals">
+            <div><span>Order revenue (item + ship + wrap)</span><span id="e-rev"></span></div>
+            <div><span>Fees + allocated overhead</span><span id="e-fees"></span></div>
+            <div class="big"><span>Net after COGS</span><span id="e-profit"></span></div>
+            <div><span>Net margin</span><span id="e-margin"></span></div>
+          </div>
+          <div class="solve">
+            <div class="box"><span class="note">Break-even list price ($0 profit)</span><strong id="e-be">—</strong></div>
+            <div class="box"><span class="note">List price for target margin</span><strong id="e-tp">—</strong></div>
+          </div>
+          <p class="note" style="margin-top:0.8rem">We do not use Etsy’s marketing “effective take rate” (~25.9%) as a per-order fee. Offsite Ads apply only when an order is attributed.</p>
+        </div>
+      </div>
+    </section>
+
+    <section data-panel="amazon" hidden>
+      <div class="banner">
+        Amazon is split: referral, selling plan, and media closing follow official public tables (<span class="chip verified">verified</span>).
+        FBA fulfillment, DIM weight, storage, and oversize are <span class="chip estimate">estimated</span> unless you paste a Seller Central fulfillment fee in the override field — please do that when you have Fee Preview / Revenue Calculator.
+        Confirm your SKU’s fee category and billed amounts in Seller Central.
+      </div>
+      <div class="grid">
+        <form class="card" id="amazon-form">
+          <h2>Amazon US FBA unit</h2>
+          <div class="row2">
+            <div>
+              <label class="f" for="a-item">Item price</label>
+              <input id="a-item" type="number" step="0.01" min="0" value="24.99" />
+            </div>
+            <div>
+              <label class="f" for="a-qty">Units</label>
+              <input id="a-qty" type="number" min="1" step="1" value="1" />
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="f" for="a-ship">Shipping charged (usually $0 on Prime)</label>
+              <input id="a-ship" type="number" step="0.01" min="0" value="0" />
+            </div>
+            <div>
+              <label class="f" for="a-gift">Gift wrap charged</label>
+              <input id="a-gift" type="number" step="0.01" min="0" value="0" />
+            </div>
+          </div>
+          <label class="f" for="a-cat">Referral category (official public table)</label>
+          <select id="a-cat">
+            <option value="home_kitchen">Home and Kitchen — 15%</option>
+            <option value="toys">Toys and Games — 15%</option>
+            <option value="beauty">Beauty / Health / Personal Care — 8% ≤$10, else 15%</option>
+            <option value="clothing">Clothing &amp; Accessories — 5% / 10% / 17% by price</option>
+            <option value="electronics">Consumer Electronics — 8%</option>
+            <option value="electronics_acc">Electronics Accessories — 15% to $100, then 8%</option>
+            <option value="grocery">Grocery and Gourmet — 8% ≤$15, else 15%</option>
+            <option value="media">Media — 15% + $1.80 closing</option>
+            <option value="custom">Custom referral %</option>
+          </select>
+          <div id="a-custom-wrap" hidden>
+            <label class="f" for="a-custom">Custom referral %</label>
+            <input id="a-custom" type="number" step="0.1" min="0" value="15" />
+          </div>
+          <div class="row2">
+            <div>
+              <label class="f" for="a-l">Length (in)</label>
+              <input id="a-l" type="number" step="0.01" min="0" value="8" />
+            </div>
+            <div>
+              <label class="f" for="a-w">Width (in)</label>
+              <input id="a-w" type="number" step="0.01" min="0" value="6" />
+            </div>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="f" for="a-h">Height (in)</label>
+              <input id="a-h" type="number" step="0.01" min="0" value="2" />
+            </div>
+            <div>
+              <label class="f" for="a-wt">Unit weight (lb)</label>
+              <input id="a-wt" type="number" step="0.01" min="0" value="0.55" />
+            </div>
+          </div>
+          <label class="f" for="a-override">Fulfillment fee override from Seller Central (leave blank to estimate)</label>
+          <input id="a-override" type="number" step="0.01" min="0" placeholder="e.g. 4.20" />
+          <div class="checks">
+            <label><input id="a-fuel" type="checkbox" checked /> 3.5% fuel &amp; logistics surcharge on fulfillment (US FBA since 17 Apr 2026)</label>
+            <label><input id="a-peak" type="checkbox" /> Peak storage rate (Oct–Dec) — <span class="chip estimate">estimate</span></label>
+            <label><input id="a-alloc" type="checkbox" /> Allocate Professional $39.99/mo across monthly units</label>
+          </div>
+          <div class="row2">
+            <div>
+              <label class="f" for="a-store-mo">Months of storage to allocate / unit</label>
+              <input id="a-store-mo" type="number" step="0.1" min="0" value="0" />
+            </div>
+            <div>
+              <label class="f" for="a-orders">Units / month (plan allocation)</label>
+              <input id="a-orders" type="number" min="1" step="1" value="200" />
+            </div>
+          </div>
+          <label class="f" for="a-plan">Selling plan</label>
+          <select id="a-plan">
+            <option value="professional">Professional — $39.99/mo (official)</option>
+            <option value="individual">Individual — $0.99 per item (official)</option>
+          </select>
+          <div class="row2">
+            <div>
+              <label class="f" for="a-cogs">COGS / unit</label>
+              <input id="a-cogs" type="number" step="0.01" min="0" value="7.50" />
+            </div>
+            <div>
+              <label class="f" for="a-ppc">PPC / unit (your number)</label>
+              <input id="a-ppc" type="number" step="0.01" min="0" value="0" />
+            </div>
+          </div>
+          <label class="f" for="a-target">Target net margin (% of item+ship+wrap)</label>
+          <input id="a-target" type="number" step="0.1" value="15" />
+          <p style="margin-top:1rem"><button type="submit">Calculate Amazon</button></p>
+        </form>
+        <div class="card">
+          <h2>Amazon breakdown</h2>
+          <p><strong id="a-tier"></strong></p>
+          <p class="note" id="a-tier-note"></p>
+          <table class="out-table">
+            <thead><tr><th>Line</th><th class="amt">Amount</th></tr></thead>
+            <tbody id="a-lines"></tbody>
+          </table>
+          <div class="totals">
+            <div><span>Sales proceeds (item + ship + wrap)</span><span id="a-rev"></span></div>
+            <div><span>Verified Amazon fees</span><span id="a-verified"></span></div>
+            <div class="est-subtotal"><span>Estimated / override fulfillment &amp; storage</span><span id="a-estimated"></span></div>
+            <div><span>Amazon + ads + allocated plan</span><span id="a-fees"></span></div>
+            <div class="big"><span id="a-profit-label">Net after COGS</span><span id="a-profit"></span></div>
+            <div><span>Net margin</span><span id="a-margin"></span></div>
+          </div>
+          <p class="note" id="a-mix-note"></p>
+          <div class="solve">
+            <div class="box"><span class="note">Break-even list price ($0 profit)</span><strong id="a-be">—</strong></div>
+            <div class="box"><span class="note">List price for target margin</span><strong id="a-tp">—</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="analytics" id="analytics"></div>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments and Amazon Seller Central. Citations: <a href="sources.html">sources</a> · <a href="SOURCES.md">SOURCES.md</a></p>
+  </footer>
+  <script src="js/fees.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
