@@ -16,7 +16,7 @@
     const el = document.getElementById("analytics");
     if (!el) return;
     const a = loadA();
-    el.textContent = `This-browser only (not sent anywhere) — Etsy calcs: ${a.etsy || 0} · Amazon calcs: ${a.amazon || 0} · Workbook clicks: ${a.workbook || 0}`;
+    el.textContent = `This-browser calc counters (not sent to FeeTruth) — Etsy calcs: ${a.etsy || 0} · Amazon calcs: ${a.amazon || 0} · Workbook clicks: ${a.workbook || 0}. Page traffic: Cloudflare Web Analytics.`;
   }
 
   function money(n, cur) {

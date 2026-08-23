@@ -18,7 +18,7 @@
   </header>
   <article class="wrap">
     <h1>Public fee changelog, 2026</h1>
-    <p class="meta">Only changes we can cite from official or official-quoted pages. Compiled snapshot 22 Aug 2026 — not a live feed. Absence of a row is not proof nothing changed.</p>
+    <p class="meta">Only changes we can cite from official or official-quoted pages. Compiled snapshot 22 Aug 2026; FeeTruth qty-base correction 23 Aug 2026 — not a live feed. Absence of a row is not proof nothing changed.</p>
 
     <h2>Amazon US</h2>
     <table class="plain">
@@ -47,7 +47,7 @@
         <tr>
           <td>15 Oct 2026 – 14 Jan 2027</td>
           <td>Holiday peak fulfillment fees apply again for FBA, Remote Fulfillment with FBA, MCF, and Buy with Prime (same date window as the prior year). Detailed peak dollar rates are on Seller Central “FBA fee rates” (login).</td>
-          <td><a href="https://sellercentral.amazon.com/seller-forums/discussions/t/3e31fbb7-04e4-873e-f74b1052e2ff">Holiday 2026 seller forum post</a></td>
+          <td><a href="https://sellercentral.amazon.com/seller-forums/discussions/t/3e31fbb7-04e0-4ed4-873e-f74b1052e2ff">Holiday 2026 seller forum post</a> (public thread; the prior UUID in this table 400ed)</td>
         </tr>
       </tbody>
     </table>
@@ -57,9 +57,14 @@
       <thead><tr><th>When</th><th>What we can cite</th><th>Cite</th></tr></thead>
       <tbody>
         <tr>
-          <td>Still in force 22 Aug 2026</td>
-          <td>Listing <strong>$0.20 USD</strong> per listed/renewed item. Transaction <strong>6.5%</strong> on displayed price + shipping + gift wrap (US: not on sales tax). These rates appear on the current Fees &amp; Payments Policy. We did <em>not</em> find an official 2026 announcement changing the 6.5% transaction rate (that rate has been 6.5% since April 2022 per Etsy’s earlier public materials).</td>
+          <td>Still in force 23 Aug 2026</td>
+          <td>Listing <strong>$0.20 USD</strong> per listed/renewed item. Transaction <strong>6.5%</strong> on displayed listing price + shipping + gift wrap (US: not on sales tax). Quantity multiplies the listing price, not the shipping / gift wrap / tax charged on the order. Official text: “the price you display for each listing plus the amount you charge for shipping and gift wrapping.” These rates appear on the current Fees &amp; Payments Policy. We did <em>not</em> find an official 2026 announcement changing the 6.5% transaction rate (that rate has been 6.5% since April 2022 per Etsy’s earlier public materials).</td>
           <td><a href="https://www.etsy.com/legal/fees">etsy.com/legal/fees</a></td>
+        </tr>
+        <tr>
+          <td>FeeTruth engine correction 23 Aug 2026</td>
+          <td>Earlier builds multiplied shipping, gift wrap, and tax by quantity. That overstated fees when qty&gt;1 and those fields were nonzero (example: qty=2, $48 item + $6.50 ship + $5 tax, ads off — engine had been $11.305 vs official-base $10.5375). Processing remains “gross order amount, including shipping and tax” + the official per-order flat fee. Offsite Ads still use the same order base and $100 cap.</td>
+          <td><a href="https://www.etsy.com/legal/fees">legal/fees</a> · <a href="https://www.etsy.com/legal/etsy-payments">legal/etsy-payments</a></td>
         </tr>
         <tr>
           <td>Still in force 22 Aug 2026</td>
@@ -82,7 +87,7 @@
     <p>If you have a Seller Central or Etsy statement that contradicts a row, treat the statement as source of truth and file it in the workbook.</p>
   </article>
   <footer>
-    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments and Amazon Seller Central.</p>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments and Amazon Seller Central. Page traffic uses Cloudflare Web Analytics.</p>
     <div class="analytics" id="analytics"></div>
   </footer>
   <script src="js/fees.js"></script>

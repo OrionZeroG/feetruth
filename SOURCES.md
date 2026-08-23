@@ -1,6 +1,6 @@
 # FeeTruth sources
 
-Compiled **22 Aug 2026**. Amounts are what official public pages said (or official text indexed on those URLs) on that date.
+Compiled **22 Aug 2026**; Etsy order-level qty base re-checked **23 Aug 2026**. Amounts are what official public pages said (or official text indexed on those URLs) on those dates.
 
 Status key:
 
@@ -24,11 +24,11 @@ Status key:
 ### Transaction fee — VERIFIED
 
 - **Rule:** 6.5% of the price you display plus shipping and gift wrapping. US sellers: transaction fee does **not** apply to sales tax. Non-US: transaction fee applies to listing price (which should include taxes the seller is responsible for), shipping, and gift wrap. Optional paid personalization is part of the displayed listing price.
-- **Logic:** `txBase = (item + shipping + giftWrap) * qty`; `transaction = txBase * 0.065`. Tax is excluded from `txBase`.
+- **Logic:** `txBase = item * qty + shipping + giftWrap`; `transaction = txBase * 0.065`. Tax is excluded from `txBase`. Shipping, gift wrap, and tax are the amounts charged on the **order** (not multiplied by qty). Quantity applies to the displayed listing price. Official wording: “the price you display for each listing plus the amount you charge for shipping and gift wrapping.” Etsy also treats shipping/taxes/gift wrap as “separately charged” versus `item price × quantity` when defining the Offsite Ads $10k sales threshold.
 - **Source:** https://www.etsy.com/legal/fees  
 - **Help:** https://help.etsy.com/hc/en-us/articles/115014483627-What-are-the-Fees-and-Taxes-for-Selling-on-Etsy  
 - **Effective:** 6.5% has been the published rate since April 2022; still the rate on the 2026 policy text.  
-- **Last verified:** 22 Aug 2026  
+- **Last verified:** 23 Aug 2026 (qty / order-level base confirmed from official legal/fees text)  
 - **Not used:** any blended “Etsy take-rate” such as 25.9%. That is not a per-order fee.
 
 ### Payment processing — VERIFIED (US and UK)
@@ -37,12 +37,12 @@ Status key:
 - **Official table (excerpt we rely on):**
   - United States: **3% + 0.25 USD**
   - United Kingdom: **4% + 0.20 GBP**
-- **Logic:** `processingBase = (item + shipping + giftWrap + tax) * qty`; `processing = processingBase * rate + fixed` (fixed is per order, not per unit).
+- **Logic:** `processingBase = item * qty + shipping + giftWrap + tax`; `processing = processingBase * rate + fixed` (fixed is per order, not per unit). Shipping/gift/tax stay order-level, matching “gross order amount, including shipping and tax” and the official table’s “% of total sale price + flat fee per order.”
 - **Source:** https://www.etsy.com/legal/etsy-payments (section B. Fee Amount country chart)  
 - **Help:** Fees and Taxes article (processing row)  
 - **Effective:** current table (US/UK rows have no 2026 change notice we found).  
-- **Last verified:** 22 Aug 2026  
-- **Fetch note:** WebFetch timed out on the payments policy. Table values are from official page text indexed on that URL.
+- **Last verified:** 23 Aug 2026 (order-level ship/tax base confirmed from official legal/etsy-payments text)  
+- **Fetch note:** Official payments-policy HTML retrieved 23 Aug 2026; US/UK rows unchanged. Earlier builds timed out on this URL.
 
 ### Offsite Ads — VERIFIED (toggle)
 
@@ -51,7 +51,7 @@ Status key:
   - Shop has made **$10,000 USD or more** in any consecutive 365-day period: **12%** for the **lifetime** of the shop (still 12% if later under $10k). Participation becomes required.
   - **Cap:** Offsite Ads fee on any one order will not exceed **$100 USD**.
   - Base: total order amount = displayed price + shipping + gift wrap (and in some jurisdictions, taxes).
-- **Logic:** user toggle `off | 15 | 12`. `ads = min(txBase * rate, 100)`. Never auto-applied.
+- **Logic:** user toggle `off | 15 | 12`. `ads = min(txBase * rate, 100)` on the same order-level `txBase` as the transaction fee (`item * qty + shipping + giftWrap`). Never auto-applied. Cap and rate toggles unchanged.
 - **Source:** https://www.etsy.com/legal/fees (Offsite Ads section); https://www.etsy.com/legal/advertising/  
 - **Help:** https://help.etsy.com/hc/en-us/articles/360000338367-How-Etsy-s-Offsite-Ads-Work  
 - **Last verified:** 22 Aug 2026  
@@ -82,7 +82,7 @@ Status key:
 ### Reverse pricing (Etsy)
 
 - Break-even: smallest list price `P` such that `profit(P) >= 0`.
-- Target margin: smallest `P` such that `profit(P) >= m * (P + shipping + gift) * qty`.
+- Target margin: smallest `P` such that `profit(P) >= m * (P * qty + shipping + gift)`.
 - Solved by bisection because Offsite Ads has a $100 cap.
 
 ---
@@ -176,17 +176,17 @@ Status key:
 
 - Peak fulfillment window announced: **15 Oct 2026 – 14 Jan 2027**.
 - **Source:** Seller Central forum “Holiday 2026: Same fees, same eligibility, earlier deadlines”  
-  https://sellercentral.amazon.com/seller-forums/discussions/t/3e31fbb7-04e4-873e-f74b1052e2ff  
+  https://sellercentral.amazon.com/seller-forums/discussions/t/3e31fbb7-04e0-4ed4-873e-f74b1052e2ff  
 - Dollar peak adders: Seller Central only → not in the calculator grid.
 
 ---
 
-## Pages we could not fetch
+## Official URL fetch log
 
 | URL | Result |
 | --- | --- |
-| https://www.etsy.com/legal/fees | JS wall / empty extract |
-| https://www.etsy.com/legal/etsy-payments | WebFetch timeout |
+| https://www.etsy.com/legal/fees | Retrieved 23 Aug 2026 (transaction / Offsite Ads wording used for the qty base) |
+| https://www.etsy.com/legal/etsy-payments | Retrieved 23 Aug 2026 (“gross order amount, including shipping and tax”; US/UK table unchanged) |
 | https://help.etsy.com/hc/en-us/articles/115014483627-What-are-the-Fees-and-Taxes-for-Selling-on-Etsy | timeout |
 | https://help.etsy.com/hc/en-us/articles/360000338367-How-Etsy-s-Offsite-Ads-Work | timeout |
 | https://help.etsy.com/hc/en-us/articles/360000337067-Pricing-and-Fees-for-Pattern | timeout |

@@ -18,7 +18,7 @@
   </header>
   <article class="wrap">
     <h1>Official sources</h1>
-    <p class="meta">Last verified 22 Aug 2026 (compiled snapshot, not a live crawl). Full rule-by-rule logic is in <a href="SOURCES.md">SOURCES.md</a>.</p>
+    <p class="meta">Last verified 23 Aug 2026 (compiled snapshot, not a live crawl). Full rule-by-rule logic is in <a href="SOURCES.md">SOURCES.md</a>.</p>
 
     <h2>Fetched successfully</h2>
     <ul>
@@ -26,13 +26,13 @@
       <li><a href="https://sell.amazon.com/pricing">sell.amazon.com/pricing</a> — selling plans and full public referral-fee table.</li>
       <li><a href="https://sell.amazon.com/pricing/estimate">sell.amazon.com/pricing/estimate</a> — points sellers to Revenue Calculator / Fee Preview.</li>
       <li><a href="https://sell.amazon.com/blog/fba-fees-guide">FBA fees guide</a> (24 Jul 2026) — qualitative FBA cost types; no dollar rate card.</li>
+      <li><a href="https://www.etsy.com/legal/fees">etsy.com/legal/fees</a> — retrieved 23 Aug 2026; listing / transaction / Offsite Ads wording (including order-level shipping and gift wrap).</li>
+      <li><a href="https://www.etsy.com/legal/etsy-payments">etsy.com/legal/etsy-payments</a> — retrieved 23 Aug 2026; processing is on the gross order amount including shipping and tax; US 3%+$0.25 and UK 4%+£0.20 unchanged.</li>
     </ul>
 
     <h2>Official URLs we could not fetch as HTML</h2>
-    <p>Etsy legal and help pages returned a JS/bot wall or timed out. Fee amounts below still come from <em>official policy text</em> sitting on those URLs (search-index excerpts of the live pages). Treat a live browser visit as the refresh check.</p>
+    <p>Some Etsy help pages still timed out. Fee amounts still come from official policy text on the named URLs. Treat a live browser visit as the refresh check.</p>
     <ul>
-      <li><a href="https://www.etsy.com/legal/fees">etsy.com/legal/fees</a> — curl got “Please enable JS”; WebFetch returned empty/timeout.</li>
-      <li><a href="https://www.etsy.com/legal/etsy-payments">etsy.com/legal/etsy-payments</a> — WebFetch timeout; official processing table is on this page.</li>
       <li><a href="https://help.etsy.com/hc/en-us/articles/115014483627-What-are-the-Fees-and-Taxes-for-Selling-on-Etsy">Etsy Help: Fees and Taxes</a> — timeout.</li>
       <li><a href="https://help.etsy.com/hc/en-us/articles/360000338367-How-Etsy-s-Offsite-Ads-Work">Etsy Help: Offsite Ads</a> — timeout.</li>
       <li><a href="https://help.etsy.com/hc/en-us/articles/360000337067-Pricing-and-Fees-for-Pattern">Etsy Help: Pattern pricing</a> — timeout.</li>
@@ -43,7 +43,7 @@
     <table class="plain">
       <thead><tr><th>Rule</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td>Etsy listing $0.20; transaction 6.5% on item+shipping+gift wrap</td><td><span class="chip verified">verified</span> official policy text</td></tr>
+        <tr><td>Etsy listing $0.20; transaction 6.5% on item×qty + shipping + gift wrap (ship/wrap/tax are order-level)</td><td><span class="chip verified">verified</span> official policy text</td></tr>
         <tr><td>Etsy Payments US 3%+$0.25; UK 4%+£0.20</td><td><span class="chip verified">verified</span> official payments table</td></tr>
         <tr><td>Offsite Ads 15% / 12% after $10k; $100 cap</td><td><span class="chip verified">verified</span> official help + legal/fees</td></tr>
         <tr><td>Pattern $15/mo; Plus $10/mo</td><td><span class="chip verified">verified</span> official policy / help</td></tr>
@@ -58,7 +58,7 @@
     </table>
   </article>
   <footer>
-    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments and Amazon Seller Central.</p>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments and Amazon Seller Central. Page traffic uses Cloudflare Web Analytics.</p>
     <div class="analytics" id="analytics"></div>
   </footer>
   <script src="js/fees.js"></script>
