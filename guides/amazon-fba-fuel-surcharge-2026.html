@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazon FBA 3.5% fuel surcharge is on the fulfillment fee — FeeTruth</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="app">
+    <h1><span>FeeTruth</span></h1>
+    <nav>
+      <a href="../index.html">Calculator</a>
+      <a href="../changelog.html">2026 changelog</a>
+      <a href="../sources.html">Sources</a>
+      <a href="../workbook.html">Seller workbook</a>
+    </nav>
+  </header>
+  <article class="wrap">
+    <h1>Amazon FBA 3.5% fuel surcharge is on the fulfillment fee, not the sale price.</h1>
+    <p class="meta">Standalone explainer. Official Amazon announcement only. Compiled 23 Aug 2026. Confirm billed amounts in Seller Central.</p>
+
+    <div class="banner">
+      <strong>Short answer.</strong> Since 17 April 2026, US (and Canada) FBA fulfillment fees are multiplied by <strong>1.035</strong>: surcharge = fulfillment fee × 3.5%. Amazon’s announcement said that averages about <strong>$0.17 per unit</strong> for US FBA, varying by size and dimensions. It is <strong>not</strong> 3.5% of the item price, and it is not a referral or storage fee.
+    </div>
+
+    <h2>What the official notice said</h2>
+    <p>Amazon’s Seller Central announcement (posted publicly by News_Amazon) titled <em>Fuel and logistics-related surcharge: FBA, MCF, and BWP in US and CA</em> states:</p>
+    <ul>
+      <li><strong>17 Apr 2026:</strong> 3.5% on fulfillment fees for FBA in the US and Canada, and Remote Fulfillment with FBA from the US into Canada, Mexico, and Brazil.</li>
+      <li><strong>2 May 2026:</strong> the same surcharge on Buy with Prime (US) and Multi-Channel Fulfillment (US and Canada).</li>
+      <li>Calculated on <strong>fulfillment fees, not the sale price</strong> of the items.</li>
+      <li>On average, <strong>$0.17 per unit for US FBA</strong>, varying by item size and dimensions.</li>
+      <li>Revenue Calculator, Profit Analytics, and Fee and Economics Preview were updated to show the surcharge.</li>
+    </ul>
+    <p>That $0.17 figure is Amazon’s stated average, not your SKU. A small-standard unit with a low fulfillment fee pays less than $0.17; a heavier or larger unit pays more. 3.5% of a $24.99 sale would be about $0.87 — that is the wrong base.</p>
+
+    <h2>Worked math (fulfillment × 1.035)</h2>
+    <p>If Seller Central Fee Preview shows a <strong>$5.00</strong> FBA fulfillment fee for one unit:</p>
+    <table class="plain">
+      <thead><tr><th>Line</th><th>Math</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>FBA fulfillment (from Fee Preview)</td><td>pasted from Seller Central</td><td>$5.00</td></tr>
+        <tr><td>Fuel &amp; logistics surcharge</td><td>$5.00 × 0.035</td><td>$0.175</td></tr>
+        <tr><td>Fulfillment including surcharge</td><td>$5.00 × 1.035</td><td>$5.175</td></tr>
+      </tbody>
+    </table>
+    <p>Referral (category % of item + shipping + gift wrap) and monthly storage stay on their own official bases. This 3.5% does not apply to those lines.</p>
+
+    <h2>This is weaker than a verified dollar on your SKU</h2>
+    <div class="banner">
+      Amazon is split: referral, selling plan, and media closing follow official public tables (<span class="chip verified">verified</span>).
+      FBA fulfillment, DIM weight, storage, and oversize are <span class="chip estimate">estimated</span> unless you paste a Seller Central fulfillment fee in the override field — please do that when you have Fee Preview / Revenue Calculator.
+      Confirm your SKU’s fee category and billed amounts in Seller Central.
+    </div>
+    <p>The <strong>3.5% rate</strong> is from the official announcement. The <strong>dollar fulfillment</strong> it multiplies is only as good as the number you give it. FeeTruth’s size/weight grid is an <span class="chip estimate">estimate</span>. Paste Fee Preview (or the fulfillment override) when you have it; then the surcharge is 3.5% of that pasted fee, not of our estimate.</p>
+
+    <h2>Official source</h2>
+    <ul>
+      <li><a href="https://sellercentral.amazon.com/seller-forums/discussions/t/7cbc0233-ee5b-4359-978a-dee7cad5c6f4">Seller Central: Fuel and logistics-related surcharge: FBA, MCF, and BWP in US and CA</a> — official News_Amazon post of the announcement (live public URL; login-walled Seller Central announcement board carries the same notice)</li>
+    </ul>
+
+    <p style="margin-top:1.5rem">
+      <a class="btn" href="../index.html?tab=amazon">Open the free Amazon FBA calculator</a>
+    </p>
+    <p class="note">Free. No account. No email. The Amazon tab leaves fulfillment as an estimate until you paste a Seller Central Fee Preview / override. The 3.5% fuel toggle is on by default (US FBA since 17 Apr 2026).</p>
+  </article>
+  <footer>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Amazon Seller Central. Page traffic uses Cloudflare Web Analytics. <a href="../index.html?tab=amazon">FeeTruth Amazon calculator</a> · <a href="../sources.html">Sources</a></p>
+    <div class="analytics" id="analytics"></div>
+  </footer>
+  <script src="../js/fees.js"></script>
+  <script src="../js/app.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "185a204e92a94cebb95cacd619e0b6a8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

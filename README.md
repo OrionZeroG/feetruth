@@ -24,9 +24,14 @@ Or open `index.html` directly via `file://` (works; no server required).
 | `changelog.html` | 2026 fee changes we can cite |
 | `sources.html` | Verified vs estimate + fetch status |
 | `workbook.html` | Offline seller workbook spec |
+| `guides/etsy-offsite-ads.html` | Standalone Offsite Ads explainer (official Etsy cites) |
+| `guides/amazon-fba-fuel-surcharge-2026.html` | Standalone FBA 3.5% fuel-surcharge explainer (official Amazon cite) |
+| `robots.txt` | Allow all; points at sitemap (HTTP until HTTPS is live) |
+| `sitemap.xml` | Homepage, existing pages, and both guides |
+| `.nojekyll` | GitHub Pages: serve static files as-is (no Jekyll) |
 | `data/workbook-template.csv` | Google Sheets–compatible template |
 | `js/fees.js` | Fee rules and math |
-| `js/app.js` | UI + localStorage counters |
+| `js/app.js` | UI + localStorage counters + optional query-string prefills |
 | `css/style.css` | Layout |
 | `SOURCES.md` | Every rule, URL, date, logic |
 

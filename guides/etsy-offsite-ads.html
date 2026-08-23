@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How Etsy Offsite Ads fees work — FeeTruth</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="app">
+    <h1><span>FeeTruth</span></h1>
+    <nav>
+      <a href="../index.html">Calculator</a>
+      <a href="../changelog.html">2026 changelog</a>
+      <a href="../sources.html">Sources</a>
+      <a href="../workbook.html">Seller workbook</a>
+    </nav>
+  </header>
+  <article class="wrap">
+    <h1>How Etsy Offsite Ads fees work (15%, 12%, $10k lock-in, $100 cap)</h1>
+    <p class="meta">Standalone explainer. Official Etsy citations only. Last checked against policy text 23 Aug 2026. Confirm on your Etsy Payments statement.</p>
+
+    <div class="banner">
+      <strong>Short answer.</strong> Offsite Ads is a separate fee on <em>attributed</em> orders only. It is <strong>15%</strong> while your shop has never reached $10,000 USD in any trailing 365-day window (you can opt out). It becomes <strong>12% for the lifetime of the shop</strong> the first time you hit that $10k threshold. The fee on any one order is <strong>capped at $100 USD</strong>. Attribution uses a <strong>30-day click window</strong>. It does <strong>not</strong> replace the 6.5% transaction fee or Etsy Payments processing — those still apply on the same order.
+    </div>
+
+    <h2>When the fee applies</h2>
+    <p>Etsy charges Offsite Ads only when an order is attributed to an Offsite Ad: a buyer clicks the ad and purchases within 30 days. It is not a shop-wide take rate and it is not blended into the 6.5% transaction line. If the order is not attributed, the Offsite Ads fee is $0.</p>
+
+    <h2>Which rate: 15% or 12%</h2>
+    <ul>
+      <li><strong>15%</strong> — the shop has always been under $10,000 USD in any consecutive 365-day period. Participation can be opted out.</li>
+      <li><strong>12%</strong> — the shop has made $10,000 USD or more in any consecutive 365-day period. The 12% rate then applies for the <strong>lifetime of the shop</strong>, including later periods under $10k. Participation becomes required.</li>
+    </ul>
+    <p>That $10k lock-in is why a shop that once crossed the threshold does not go back to 15% or to opt-out.</p>
+
+    <h2>$100 per-order cap</h2>
+    <p>The Offsite Ads fee on any one order will not exceed $100 USD. A large attributed order is still 15% or 12% of the order amount until that product hits $100, then it stops.</p>
+
+    <h2>What the percentage is taken on</h2>
+    <p>Official policy uses the order amount: the price you display plus shipping and gift wrapping (and, in some jurisdictions, taxes). Sales tax is <em>not</em> in the US transaction-fee base; treat tax on Offsite Ads as jurisdiction-specific and confirm on the statement.</p>
+    <p>FeeTruth models the Offsite Ads base the same way as the US transaction base: <strong>item × quantity + shipping + gift wrap</strong> (shipping and gift wrap are order-level, not multiplied by quantity). Tax is not added to that Offsite Ads base in the calculator.</p>
+
+    <h2>It does not replace 6.5% + processing</h2>
+    <p>Offsite Ads is an extra line. An attributed order still pays:</p>
+    <ol>
+      <li>Listing fee ($0.20 USD per listed or renewed unit), if applicable</li>
+      <li>Transaction fee — 6.5% of displayed price + shipping + gift wrap (US: not on sales tax)</li>
+      <li>Etsy Payments processing — US 3% + $0.25 on the gross order amount including shipping and tax</li>
+      <li>Offsite Ads — 15% or 12% of the order amount, capped at $100</li>
+    </ol>
+    <p>Do not fold Offsite Ads into a single “Etsy take rate” with the 6.5% and processing lines. They are separate official fees.</p>
+
+    <h2>Worked example: $50 item + $8 shipping</h2>
+    <p>US shop, quantity 1, no gift wrap, no tax, one attributed order. Order amount for transaction and Offsite Ads = $50 + $8 = <strong>$58.00</strong>.</p>
+    <table class="plain">
+      <thead><tr><th>Line</th><th>Math</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Listing</td><td>$0.20 × 1 unit</td><td>$0.20</td></tr>
+        <tr><td>Transaction (6.5%)</td><td>$58.00 × 0.065</td><td>$3.77</td></tr>
+        <tr><td>Processing (US 3% + $0.25)</td><td>$58.00 × 0.03 + $0.25</td><td>$1.99</td></tr>
+        <tr><td>Offsite Ads at 15% (under $10k)</td><td>min($58.00 × 0.15, $100)</td><td>$8.70</td></tr>
+        <tr><td>Offsite Ads at 12% (lifetime after $10k)</td><td>min($58.00 × 0.12, $100)</td><td>$6.96</td></tr>
+      </tbody>
+    </table>
+    <p>The 6.5% + processing subtotal is <strong>$5.76</strong> either way ($3.77 + $1.99). Offsite Ads is the additional $8.70 or $6.96 — not a substitute for those two lines. Neither rate hits the $100 cap on a $58 order (the cap would bind around a $667 order at 15%, or about $834 at 12%).</p>
+
+    <h2>Official sources</h2>
+    <ul>
+      <li><a href="https://www.etsy.com/legal/fees">Etsy Fees &amp; Payments Policy</a> — listing, 6.5% transaction, Offsite Ads rates, $10k lock-in, $100 cap</li>
+      <li><a href="https://help.etsy.com/hc/en-us/articles/360000338367-How-Etsy-s-Offsite-Ads-Work">Etsy Help: How Etsy’s Offsite Ads Work</a> — attribution, 30-day click window, 15% / 12% rules</li>
+    </ul>
+
+    <p style="margin-top:1.5rem">
+      <a class="btn" href="../index.html?tab=etsy&amp;item=50&amp;qty=1&amp;ship=8&amp;gift=0&amp;tax=0&amp;ads=15">Open the free calculator with this $50 + $8 example</a>
+    </p>
+    <p class="note">Free. No account. No email. The link prefills item $50, shipping $8, and Offsite Ads at 15%. Switch the Offsite Ads control to 12% to see the lifetime rate on the same order.</p>
+  </article>
+  <footer>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments. Page traffic uses Cloudflare Web Analytics. <a href="../index.html">FeeTruth calculator</a> · <a href="../sources.html">Sources</a></p>
+    <div class="analytics" id="analytics"></div>
+  </footer>
+  <script src="../js/fees.js"></script>
+  <script src="../js/app.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "185a204e92a94cebb95cacd619e0b6a8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>
