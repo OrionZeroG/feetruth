@@ -1,12 +1,12 @@
 /**
- * FeeTruth fee engine — 22 Aug 2026
+ * FeeTruth fee engine — 23 Aug 2026
  * Every numeric rule is documented in /SOURCES.md.
  * VERIFIED = taken from official public page text we could retrieve or
  *            from official policy text indexed on the official URL.
  * ESTIMATE = official table not publicly fetchable, or unofficial transcription.
  */
 
-const VERIFIED = "22 Aug 2026";
+const VERIFIED = "23 Aug 2026";
 
 /* ---------- Etsy ---------- */
 const ETSY = {
@@ -27,9 +27,16 @@ const ETSY = {
 
 /**
  * Etsy per-order math.
- * Transaction base (US): item + shipping + gift wrap. Not sales tax.
- * Processing base: item + shipping + gift wrap + tax (if charged / collected on the order).
- * Offsite Ads: % of order amount (item+shipping+gift wrap), capped at $100 USD.
+ * Quantity multiplies the displayed listing price (and listing-fee units).
+ * Shipping, gift wrap, and tax are order-level: the amounts charged on the
+ * sale. They are not multiplied by qty.
+ * Official: “6.5% of the price you display for each listing plus the amount
+ * you charge for shipping and gift wrapping” (legal/fees). Processing is on
+ * the “gross order amount, including shipping and tax” (legal/etsy-payments).
+ * Transaction base (US): item×qty + shipping + gift wrap. Not sales tax.
+ * Processing base: item×qty + shipping + gift wrap + tax (if charged on the order).
+ * Offsite Ads: % of that same order amount (item×qty + shipping + gift wrap),
+ * capped at $100 USD. Toggle and cap behavior unchanged.
  * Listing: $0.20 per listed/renewed unit; multi-qty auto-renews $0.20 per additional unit sold.
  * Pattern/Plus: monthly overhead, allocated only if opted in.
  */
@@ -47,8 +54,9 @@ function etsyFees(input) {
   const listingUnits = input.includeListing === false ? 0 : qty;
   const listing = listingUnits * ETSY.listingUsd;
 
-  const txBase = (item + shipping + gift) * qty;
-  const processingBase = (item + shipping + gift + tax) * qty;
+  const itemTotal = item * qty;
+  const txBase = itemTotal + shipping + gift;
+  const processingBase = itemTotal + shipping + gift + tax;
   const transaction = txBase * ETSY.transactionRate;
   const processing = processingBase * proc.rate + proc.fixed;
 
@@ -83,8 +91,8 @@ function etsyFees(input) {
       : "USD",
     lines: [
       { name: "Listing fee", amount: listing, status: "verified", note: `${listingUnits} × $0.20 USD` },
-      { name: "Transaction fee (6.5%)", amount: transaction, status: "verified", note: "On item + shipping + gift wrap" },
-      { name: `Payment processing (${proc.label})`, amount: processing, status: "verified", note: "On item + shipping + gift wrap + tax" },
+      { name: "Transaction fee (6.5%)", amount: transaction, status: "verified", note: "On item×qty + shipping + gift wrap (order-level ship/wrap)" },
+      { name: `Payment processing (${proc.label})`, amount: processing, status: "verified", note: "On item×qty + shipping + gift wrap + tax (order-level ship/wrap/tax)" },
       { name: `Offsite Ads (${adsLabel})`, amount: ads, status: adsRate ? "verified" : "off", note: adsRate ? `Capped at $${ETSY.offsite.capUsd} per order` : "Not applied" },
       { name: "Allocated Pattern / Plus", amount: overhead, status: overhead ? "verified" : "off", note: overhead ? `$${monthly}/mo ÷ ${ordersMonth} orders` : "Overhead not allocated" },
       { name: "VAT on Etsy fees (UK)", amount: vatOnFees, status: vatOnFees ? "estimate" : "off", note: vatOnFees ? `${(vatOnFeesRate * 100).toFixed(0)}% on Etsy service fees — confirm with your tax advisor / Etsy statement` : "Off" },

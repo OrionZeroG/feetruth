@@ -1,8 +1,8 @@
 # FeeTruth MVP
 
-Static marketplace fee calculator. No accounts, no spend, no third-party analytics, no paid host.
+Static marketplace fee calculator. No accounts, no spend, no paid host.
 
-Last source check: **22 Aug 2026**.
+Last source check: **23 Aug 2026** (Etsy order-level shipping / gift wrap / tax base).
 
 ## Open locally
 
@@ -32,7 +32,17 @@ Or open `index.html` directly via `file://` (works; no server required).
 
 ## Analytics
 
-Counters live in `localStorage` key `feetruth.analytics.v1` on your machine only.
+Cloudflare Web Analytics is on every HTML page (privacy-oriented page analytics via Cloudflare’s beacon). That is the only off-device traffic measurement.
+
+On-page calc counters live in `localStorage` key `feetruth.analytics.v1` on your machine only; they are not sent to FeeTruth.
+
+## Tests
+
+```bash
+node test/fees.test.js
+```
+
+Locks the qty=1 US path and the qty&gt;1 order-level shipping / gift wrap / tax base.
 
 ## Honesty rules
 
