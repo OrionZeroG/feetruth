@@ -16,7 +16,7 @@
     const el = document.getElementById("analytics");
     if (!el) return;
     const a = loadA();
-    el.textContent = `This-browser calc counters (not sent to FeeTruth) — Etsy calcs: ${a.etsy || 0} · Amazon calcs: ${a.amazon || 0} · Workbook clicks: ${a.workbook || 0}. Page traffic: Cloudflare Web Analytics.`;
+    el.textContent = `This-browser calc counters (not sent to FeeTruth) — Etsy calcs: ${a.etsy || 0} · Amazon calcs: ${a.amazon || 0} · Workbook clicks: ${a.workbook || 0} · Checkout clicks: ${a.checkout || 0}. Page traffic: Cloudflare Web Analytics.`;
   }
 
   function money(n, cur) {
@@ -187,6 +187,9 @@
     });
     document.querySelectorAll("[data-workbook]").forEach((el) => {
       el.addEventListener("click", () => bump("workbook"));
+    });
+    document.querySelectorAll("[data-checkout]").forEach((el) => {
+      el.addEventListener("click", () => bump("checkout"));
     });
     if (document.getElementById("e-item")) runEtsy();
     if (document.getElementById("a-item")) runAmazon();
