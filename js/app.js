@@ -144,8 +144,29 @@
     });
   }
 
+  function applyQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const hash = (window.location.hash || "").replace(/^#/, "");
+    const tab = params.get("tab") || hash;
+    if (tab === "amazon" || tab === "etsy") showPanel(tab);
+
+    function setIfPresent(id, key) {
+      const el = document.getElementById(id);
+      if (!el || !params.has(key)) return;
+      el.value = params.get(key);
+    }
+    setIfPresent("e-item", "item");
+    setIfPresent("e-qty", "qty");
+    setIfPresent("e-ship", "ship");
+    setIfPresent("e-gift", "gift");
+    setIfPresent("e-tax", "tax");
+    setIfPresent("e-ads", "ads");
+    setIfPresent("a-override", "override");
+  }
+
   function init() {
     renderAnalytics();
+    applyQuery();
     const etsyForm = document.getElementById("etsy-form");
     const amzForm = document.getElementById("amazon-form");
     if (etsyForm) {
