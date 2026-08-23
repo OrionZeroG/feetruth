@@ -54,7 +54,7 @@ Status key:
 - **Logic:** user toggle `off | 15 | 12`. `ads = min(txBase * rate, 100)` on the same order-level `txBase` as the transaction fee (`item * qty + shipping + giftWrap`). Never auto-applied. Cap and rate toggles unchanged.
 - **Source:** https://www.etsy.com/legal/fees (Offsite Ads section); https://www.etsy.com/legal/advertising/  
 - **Help:** https://help.etsy.com/hc/en-us/articles/360000338367-How-Etsy-s-Offsite-Ads-Work  
-- **Guide:** `/guides/etsy-offsite-ads.html` (same official URLs; worked $50+$8 example).  
+- **Guide:** `/guides/etsy-fee-calculator.html` (all official Etsy lines; worked $48+$6.50 and qty=2 examples). `/guides/etsy-offsite-ads.html` (same official URLs; worked $50+$8 example).  
 - **Last verified:** 22 Aug 2026  
 
 ### Pattern — VERIFIED (overhead, opt-in)
@@ -130,7 +130,7 @@ Status key:
 - **Rule:** 3.5% of **fulfillment fees** (not sale price) for US/Canada FBA and Remote Fulfillment with FBA from US into CA/MX/BR, starting **17 Apr 2026**. MCF / Buy with Prime: **2 May 2026**. Amazon said ~$0.17/unit average for US FBA.
 - **Logic:** if toggle on (default): `fuel = fulfillment * 0.035`.
 - **Source:** Seller Central announcement “Fuel and logistics-related surcharge: FBA, MCF, and BWP in US and CA”, public copy: https://sellercentral.amazon.com/seller-forums/discussions/t/7cbc0233-ee5b-4359-978a-dee7cad5c6f4  
-- **Guide:** `/guides/amazon-fba-fuel-surcharge-2026.html` (same official announcement; fulfillment dollars remain estimate unless Fee Preview / override is pasted).  
+- **Guide:** `/guides/amazon-fba-calculator.html` (referral official; fulfillment estimate; 2026 fuel on fulfillment). `/guides/amazon-fba-fuel-surcharge-2026.html` (same official announcement; fulfillment dollars remain estimate unless Fee Preview / override is pasted).  
 - **Press quoting the same notice:** https://www.cnbc.com/2026/04/02/amazon-add-3point5percent-fuel-and-logistics-surcharge-for-sellers-amid-iran-war.html  
 - **Last verified:** 22 Aug 2026  
 - **Note:** Amazon called it temporary and did not publish an end date in the announcement text we have. Toggle remains so you can turn it off if it ends.

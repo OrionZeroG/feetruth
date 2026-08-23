@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="google-site-verification" content="FA61oJtBHolei19M53Q5c3lcyUGa_Wp4abpnqE888b4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Etsy fee calculator (2026) — listing, 6.5%, processing, Offsite Ads | FeeTruth</title>
+  <meta name="description" content="Itemized Etsy fee calculator for 2026: $0.20 listing, 6.5% on item + shipping + gift wrap (not US tax), US processing 3% + $0.25, and Offsite Ads as a separate 15% or 12% line with a $100 cap." />
+  <link rel="canonical" href="http://tryfeetruth.com/guides/etsy-fee-calculator.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="app">
+    <h1><span>FeeTruth</span></h1>
+    <nav>
+      <a href="../index.html">Calculator</a>
+      <a href="../changelog.html">2026 changelog</a>
+      <a href="../sources.html">Sources</a>
+      <a href="../workbook.html">Seller workbook</a>
+    </nav>
+  </header>
+  <article class="wrap">
+    <h1>Etsy fee calculator (2026): every official line, not a blended take rate</h1>
+    <p class="meta">Standalone explainer of the same math as the free FeeTruth calculator. Official Etsy citations only. Last checked against policy text 23 Aug 2026. Confirm on your Etsy Payments statement.</p>
+
+    <div class="banner">
+      <strong>Short answer.</strong> A US Etsy order is not “about 25.9%.” It is four separate official lines:
+      <strong>$0.20 listing</strong> per listed or renewed unit;
+      <strong>6.5% transaction</strong> on item × quantity + shipping + gift wrap (not sales tax);
+      <strong>Etsy Payments US 3% + $0.25</strong> on the gross order amount including shipping and tax;
+      and <strong>Offsite Ads 15% or 12%</strong> only on attributed orders, capped at <strong>$100</strong>.
+      FeeTruth never folds those into one mystery percent.
+    </div>
+
+    <p>
+      <a class="btn" href="../index.html?tab=etsy&amp;item=48&amp;qty=1&amp;ship=6.50&amp;gift=0&amp;tax=0&amp;ads=off">Open the free Etsy calculator with this $48 + $6.50 example</a>
+    </p>
+
+    <h2>What Etsy actually charges</h2>
+    <p>These are the current official US rules the calculator models. They are still the published rates on 23 Aug 2026. We did not find an official 2026 announcement changing the 6.5% transaction rate (that rate has been 6.5% since April 2022).</p>
+    <table class="plain">
+      <thead><tr><th>Line</th><th>Official base</th><th>Rate</th></tr></thead>
+      <tbody>
+        <tr><td>Listing</td><td>Per listed or renewed unit (auto-renews on extra units sold)</td><td>$0.20 USD</td></tr>
+        <tr><td>Transaction</td><td>Displayed item price × quantity + shipping + gift wrap. US: not on sales tax. Shipping and gift wrap are the amounts charged on the order, not × quantity.</td><td>6.5%</td></tr>
+        <tr><td>Etsy Payments (US)</td><td>Gross order amount: item × quantity + shipping + gift wrap + tax. Flat fee is per order.</td><td>3% + $0.25</td></tr>
+        <tr><td>Etsy Payments (UK)</td><td>Same gross-order base; listing and subscriptions stay billed in USD</td><td>4% + £0.20</td></tr>
+        <tr><td>Offsite Ads</td><td>Attributed orders only (30-day click). Same order amount as the US transaction base in this calculator. Never a shop-wide take rate.</td><td>15% or 12%, $100 cap</td></tr>
+        <tr><td>Pattern / Etsy Plus</td><td>Monthly overhead, not a per-order fee. The calculator allocates them only if you check that box.</td><td>$15/mo · $10/mo</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Listing fee: $0.20 per unit</h2>
+    <p>Official policy: $0.20 USD per item listed or renewed on Etsy.com / apps. Multi-quantity listings pay $0.20 up front, then $0.20 auto-renewal as additional units sell. Editing a listing is free. Pattern-only listings do not incur this listing fee. FeeTruth’s listing toggle defaults on and multiplies $0.20 by quantity so a multi-qty sale can carry one listing renewal per unit sold.</p>
+
+    <h2>Transaction fee: 6.5% on item + shipping + gift wrap</h2>
+    <p>Official wording: “6.5% of the price you display for each listing plus the amount you charge for shipping and gift wrapping.” For US sellers the transaction fee does <strong>not</strong> apply to sales tax.</p>
+    <p>Quantity multiplies the displayed listing price. Shipping, gift wrap, and tax are order-level: the amounts charged on that sale, not multiplied by quantity. Optional paid personalization is part of the displayed listing price.</p>
+    <p>FeeTruth: <code>txBase = item × qty + shipping + gift wrap</code>. Tax is excluded from that base.</p>
+
+    <h2>Etsy Payments: US 3% + $0.25</h2>
+    <p>Processing varies by the location of the seller’s bank account. The official US row is 3% + $0.25 USD; the UK row is 4% + £0.20. Official payments policy charges that percent + flat fee on the <strong>gross order amount, including shipping and tax</strong>. The flat fee is per order, not per unit.</p>
+    <p>FeeTruth: <code>processingBase = item × qty + shipping + gift wrap + tax</code>. That is why tax changes processing and not the 6.5% line.</p>
+
+    <h2>Offsite Ads is a separate line</h2>
+    <p>Offsite Ads applies only when an order is attributed: a buyer clicks the ad and purchases within 30 days. It does not replace 6.5% + processing.</p>
+    <ul>
+      <li><strong>15%</strong> while the shop has never reached $10,000 USD in any trailing 365-day window (opt-out allowed).</li>
+      <li><strong>12% for the lifetime of the shop</strong> the first time that $10k threshold is met (participation required; it does not revert).</li>
+      <li><strong>$100 USD cap</strong> on any one order.</li>
+    </ul>
+    <p>FeeTruth models the Offsite Ads base the same way as the US transaction base: item × quantity + shipping + gift wrap. Tax is not added to that Offsite Ads base in the calculator. Do not blend Offsite Ads into a single “Etsy take rate.” The longer write-up is <a href="etsy-offsite-ads.html">How Etsy Offsite Ads fees work</a>.</p>
+
+    <h2>Worked example: $48 item + $6.50 shipping</h2>
+    <p>US shop, quantity 1, no gift wrap, no tax, Offsite Ads off. Order amount for transaction = <strong>$54.50</strong>. Processing base is the same $54.50 because tax is $0. These are the locked homepage-default numbers in the fee engine.</p>
+    <table class="plain" data-example="etsy-us-48-6.50">
+      <thead><tr><th>Line</th><th>Math</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Listing</td><td>$0.20 × 1 unit</td><td>$0.20</td></tr>
+        <tr><td>Transaction (6.5%)</td><td>$54.50 × 0.065</td><td>$3.5425</td></tr>
+        <tr><td>Processing (US 3% + $0.25)</td><td>$54.50 × 0.03 + $0.25</td><td>$1.885</td></tr>
+        <tr><td>Offsite Ads</td><td>not attributed</td><td>$0.00</td></tr>
+        <tr><td><strong>Etsy fees</strong></td><td></td><td><strong>$5.6275</strong></td></tr>
+      </tbody>
+    </table>
+    <p>A 25.9% “take rate” on $54.50 would be about $14.12. That is not this order. Etsy statements round to cents; FeeTruth keeps the unrounded official-rate product so you can see the math.</p>
+
+    <h2>Quantity 2 does not double shipping</h2>
+    <p>Same $48 item, quantity 2, $6.50 shipping on the order, $5.00 tax, ads off. Transaction base = $48 × 2 + $6.50 = <strong>$102.50</strong>. Processing base = $102.50 + $5.00 tax = <strong>$107.50</strong>.</p>
+    <table class="plain" data-example="etsy-us-qty2-tax">
+      <thead><tr><th>Line</th><th>Math</th><th>Amount</th></tr></thead>
+      <tbody>
+        <tr><td>Listing</td><td>$0.20 × 2 units</td><td>$0.40</td></tr>
+        <tr><td>Transaction (6.5%)</td><td>$102.50 × 0.065</td><td>$6.6625</td></tr>
+        <tr><td>Processing (US 3% + $0.25)</td><td>$107.50 × 0.03 + $0.25</td><td>$3.475</td></tr>
+        <tr><td><strong>Etsy fees</strong></td><td></td><td><strong>$10.5375</strong></td></tr>
+      </tbody>
+    </table>
+    <p>If shipping and tax were wrongly multiplied by quantity, this order would show $11.305. That overstatement is a calculator bug, not an Etsy fee. Confirm ship / wrap / tax as the amounts on the order.</p>
+
+    <h2>What this page will not do</h2>
+    <ul>
+      <li>Apply Etsy’s marketing “effective take rate” (~25.9%) as a per-order fee.</li>
+      <li>Blend Offsite Ads into the 6.5% or processing lines.</li>
+      <li>Treat tax as part of the US transaction-fee base.</li>
+      <li>Multiply shipping, gift wrap, or tax by quantity.</li>
+    </ul>
+
+    <h2>Pattern and Etsy Plus</h2>
+    <p>Pattern is $15 USD/mo after trial. Etsy Plus is $10 USD/mo (Plus includes listing credits the calculator does not model as a fee reduction). Neither is a per-order fee. Check “allocate subscriptions” only if you want that monthly cost spread across a month of orders.</p>
+
+    <h2>Questions this calculator is built to answer</h2>
+    <h3>How much does Etsy take per sale?</h3>
+    <p>On a US order with no Offsite Ads, add $0.20 per unit + 6.5% of item × qty + shipping + gift wrap + (3% of that same amount plus tax) + $0.25. There is no single official percent for “what Etsy takes.”</p>
+    <h3>Does Etsy charge 6.5% on shipping?</h3>
+    <p>Yes. Official policy includes the amount you charge for shipping (and gift wrapping) in the 6.5% transaction base.</p>
+    <h3>Does Etsy charge the transaction fee on sales tax?</h3>
+    <p>Not for US sellers. Tax still sits in the Etsy Payments processing base when you charge tax on the order.</p>
+    <h3>When is Offsite Ads 15% vs 12%?</h3>
+    <p>15% until the shop has ever hit $10k USD in a trailing 365-day window; 12% for the lifetime of the shop after that, with a $100 per-order cap. Details: <a href="etsy-offsite-ads.html">Offsite Ads explainer</a>.</p>
+
+    <h2>Official sources</h2>
+    <ul>
+      <li><a href="https://www.etsy.com/legal/fees">Etsy Fees &amp; Payments Policy</a> — listing, 6.5% transaction, Offsite Ads rates, $10k lock-in, $100 cap</li>
+      <li><a href="https://www.etsy.com/legal/etsy-payments">Etsy Payments Policy</a> — processing table (US 3% + $0.25; UK 4% + £0.20) and gross-order base</li>
+      <li><a href="https://help.etsy.com/hc/en-us/articles/360000338367-How-Etsy-s-Offsite-Ads-Work">Etsy Help: How Etsy’s Offsite Ads Work</a> — attribution and 15% / 12% rules</li>
+      <li><a href="../sources.html">FeeTruth sources</a> · <a href="../SOURCES.md">SOURCES.md</a> · <a href="../changelog.html">2026 changelog</a></li>
+    </ul>
+
+    <p style="margin-top:1.5rem">
+      <a class="btn" href="../index.html?tab=etsy&amp;item=48&amp;qty=1&amp;ship=6.50&amp;gift=0&amp;tax=0&amp;ads=off">Calculate this order</a>
+    </p>
+    <p class="note">Free. No account. No email. The link prefills the $48 + $6.50 US example. Change quantity, tax, or Offsite Ads on the form to see the other lines on this page.</p>
+
+    <aside class="cta">
+      <h2>FeeTruth Seller Workbook — $19 one-time</h2>
+      <p>
+        Optional paid file: a CSV template plus a how-to for the same itemized math as the free calculator, and notes on 2026 fee rules we actually cite.
+        Lifetime file access via Whop Files. Fee tables change; re-download when we post a changelog update. Not a subscription. The calculator stays free.
+      </p>
+      <p><a class="btn" data-checkout href="https://whop.com/checkout/plan_oC1FbrBQ9y2yp">Buy Seller Workbook — $19</a></p>
+    </aside>
+  </article>
+  <footer>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Etsy Payments. Page traffic uses Cloudflare Web Analytics. <a href="../index.html">FeeTruth calculator</a> · <a href="../sources.html">Sources</a> · <a href="amazon-fba-calculator.html">Amazon FBA calculator (2026)</a></p>
+    <p>Optional: <a data-checkout href="https://whop.com/checkout/plan_oC1FbrBQ9y2yp">FeeTruth Seller Workbook — $19 one-time</a> (CSV + guide; lifetime file access on Whop).</p>
+    <div class="analytics" id="analytics"></div>
+  </footer>
+  <script src="../js/fees.js"></script>
+  <script src="../js/app.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "185a204e92a94cebb95cacd619e0b6a8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

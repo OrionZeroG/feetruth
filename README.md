@@ -24,10 +24,12 @@ Or open `index.html` directly via `file://` (works; no server required).
 | `changelog.html` | 2026 fee changes we can cite |
 | `sources.html` | Verified vs estimate + fetch status |
 | `workbook.html` | Offline seller workbook spec |
+| `guides/etsy-fee-calculator.html` | Indexable Etsy fee-calculator explainer (all official lines + worked examples) |
+| `guides/amazon-fba-calculator.html` | Indexable Amazon FBA calculator explainer (referral official; fulfillment estimate; 2026 fuel) |
 | `guides/etsy-offsite-ads.html` | Standalone Offsite Ads explainer (official Etsy cites) |
 | `guides/amazon-fba-fuel-surcharge-2026.html` | Standalone FBA 3.5% fuel-surcharge explainer (official Amazon cite) |
 | `robots.txt` | Allow all; points at sitemap (HTTP until HTTPS is live) |
-| `sitemap.xml` | Homepage, existing pages, and both guides |
+| `sitemap.xml` | Homepage, existing pages, and all guides |
 | `.nojekyll` | GitHub Pages: serve static files as-is (no Jekyll) |
 | `data/workbook-template.csv` | Google Sheets–compatible template |
 | `js/fees.js` | Fee rules and math |
@@ -45,9 +47,11 @@ On-page calc counters live in `localStorage` key `feetruth.analytics.v1` on your
 
 ```bash
 node test/fees.test.js
+node test/checkout-cta.test.js
+node test/guides.test.js
 ```
 
-Locks the qty=1 US path and the qty&gt;1 order-level shipping / gift wrap / tax base.
+Locks the qty=1 US path, the qty&gt;1 order-level shipping / gift wrap / tax base, public checkout URLs, and explainer worked examples.
 
 ## Honesty rules
 

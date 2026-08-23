@@ -9,7 +9,12 @@ const path = require("path");
 const assert = require("assert");
 
 const CHECKOUT = "https://whop.com/checkout/plan_oC1FbrBQ9y2yp";
-const files = ["index.html", "workbook.html"];
+const files = [
+  "index.html",
+  "workbook.html",
+  "guides/etsy-fee-calculator.html",
+  "guides/amazon-fba-calculator.html"
+];
 
 for (const file of files) {
   const html = fs.readFileSync(path.join(__dirname, "..", file), "utf8");
@@ -24,5 +29,5 @@ for (const file of files) {
   });
 }
 
-console.log("ok  homepage and workbook CTAs use exact checkout URL");
+console.log("ok  homepage, workbook, and fee-explainer CTAs use exact checkout URL");
 console.log("1 check passed");

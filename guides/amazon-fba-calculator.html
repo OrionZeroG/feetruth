@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="google-site-verification" content="FA61oJtBHolei19M53Q5c3lcyUGa_Wp4abpnqE888b4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Amazon FBA calculator (2026) — referral, fulfillment, 3.5% fuel | FeeTruth</title>
+  <meta name="description" content="Amazon FBA calculator for 2026: official referral and selling-plan lines, fulfillment as an estimate unless you paste Fee Preview, and the 3.5% fuel surcharge on fulfillment fees — not the sale price." />
+  <link rel="canonical" href="http://tryfeetruth.com/guides/amazon-fba-calculator.html" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <header class="app">
+    <h1><span>FeeTruth</span></h1>
+    <nav>
+      <a href="../index.html">Calculator</a>
+      <a href="../changelog.html">2026 changelog</a>
+      <a href="../sources.html">Sources</a>
+      <a href="../workbook.html">Seller workbook</a>
+    </nav>
+  </header>
+  <article class="wrap">
+    <h1>Amazon FBA calculator (2026): referral is official; fulfillment is an estimate until you paste Fee Preview</h1>
+    <p class="meta">Standalone explainer of the same math as the free FeeTruth Amazon tab. Compiled 23 Aug 2026. Confirm billed amounts in Seller Central.</p>
+
+    <div class="banner">
+      <strong>Short answer.</strong> An Amazon US FBA unit is not one percent of the list price.
+      <span class="chip verified">verified</span> Referral (category % of item + shipping + gift wrap), the $39.99 Professional plan or $0.99 Individual per-item fee, and the $1.80 media closing fee follow official public tables.
+      <span class="chip estimate">estimate</span> FBA fulfillment, DIM weight, storage, and oversize are estimates unless you paste a Seller Central fulfillment fee.
+      The <strong>3.5% fuel and logistics surcharge</strong> (since 17 Apr 2026) multiplies the <em>fulfillment fee</em>, not the sale price.
+    </div>
+
+    <p>
+      <a class="btn" href="../index.html?tab=amazon&amp;override=5">Open the free Amazon FBA calculator with a $5.00 Fee Preview override</a>
+    </p>
+
+    <h2>The 2026 split sellers actually need</h2>
+    <table class="plain">
+      <thead><tr><th>Line</th><th>Status in FeeTruth</th><th>Official base</th></tr></thead>
+      <tbody>
+        <tr><td>Referral</td><td><span class="chip verified">verified</span></td><td>Total price = list + shipping + gift wrap (not tax). Greater of the category % or the category minimum (usually $0.30).</td></tr>
+        <tr><td>Selling plan</td><td><span class="chip verified">verified</span></td><td>Professional $39.99/mo, or Individual $0.99 per item sold.</td></tr>
+        <tr><td>Media closing</td><td><span class="chip verified">verified</span></td><td>$1.80 per media item, on top of the 15% media referral.</td></tr>
+        <tr><td>FBA fulfillment</td><td><span class="chip estimate">estimate</span> unless override</td><td>Size tier + shipping weight + price band. Official 2026 dollar grid is Seller Central, not a public page we could fetch.</td></tr>
+        <tr><td>Fuel &amp; logistics 3.5%</td><td>Rate <span class="chip verified">verified</span>; dollars inherit the fulfillment base</td><td>Fulfillment fee × 3.5%. Not the item price. US/Canada FBA from 17 Apr 2026.</td></tr>
+        <tr><td>Monthly storage</td><td><span class="chip estimate">estimate</span></td><td>Cubic feet × seasonal $/cu ft. Dollars shipped here are widely published 2026 figures, not a fetched Seller Central table.</td></tr>
+      </tbody>
+    </table>
+    <p>Amazon’s 15 Oct 2025 seller letter said 2026 US FBA fees rise by an average of <strong>$0.08 per unit</strong> effective 15 Jan 2026, with <strong>no new FBA fee types</strong>. The public referral table on sell.amazon.com still showed the long-standing category percentages when we fetched it on 22 Aug 2026.</p>
+
+    <h2>Referral fees (official public table)</h2>
+    <p>Charged on total price = list + shipping + gift wrap. Category may differ from the browse node shoppers see. Presets below are the rows FeeTruth implements from <a href="https://sell.amazon.com/pricing">sell.amazon.com/pricing</a> (fetched 22 Aug 2026).</p>
+    <table class="plain">
+      <thead><tr><th>Category</th><th>Official rule</th></tr></thead>
+      <tbody>
+        <tr><td>Home and Kitchen</td><td>15%, min $0.30</td></tr>
+        <tr><td>Toys and Games</td><td>15%, min $0.30</td></tr>
+        <tr><td>Beauty / Health / Personal Care</td><td>8% if total ≤ $10; 15% if &gt; $10; min $0.30</td></tr>
+        <tr><td>Clothing and Accessories</td><td>5% if ≤ $15; 10% if $15.01–$20; 17% if &gt; $20; min $0.30</td></tr>
+        <tr><td>Consumer Electronics</td><td>8%, min $0.30</td></tr>
+        <tr><td>Electronics Accessories</td><td>15% of the portion ≤ $100 + 8% of the portion &gt; $100; min $0.30</td></tr>
+        <tr><td>Grocery and Gourmet</td><td>8% if ≤ $15; 15% if &gt; $15</td></tr>
+        <tr><td>Media (Books, DVD, Music, Software, Video)</td><td>15% + $1.80 closing fee</td></tr>
+      </tbody>
+    </table>
+    <p>If your SKU’s fee category is not in that list, use the custom % field and confirm the category in Seller Central.</p>
+
+    <h2>Fulfillment dollars are estimates until you paste Fee Preview</h2>
+    <p>Public Amazon pages describe the method (size + weight; Low-Price FBA under $10) but do not publish the 2026 dollar grid. FeeTruth’s size/weight bands are a conservative transcription of publicly circulated 2026 non-peak US FBA rates, labeled <span class="chip estimate">estimate</span>.</p>
+    <p>Size-tier cutoffs we ship (also estimate — long-standing public US FBA rules; confirm in Seller Central):</p>
+    <ul>
+      <li><strong>Small standard:</strong> longest ≤ 15 in, median ≤ 12 in, shortest ≤ 0.75 in, unit weight ≤ 1 lb. Shipping weight = unit weight.</li>
+      <li><strong>Large standard:</strong> longest ≤ 18 in, median ≤ 14 in, shortest ≤ 8 in, shipping weight ≤ 20 lb. Shipping weight = greater of unit weight and DIM (L × W × H / 139).</li>
+      <li><strong>Oversize / bulky:</strong> detailed extra-large card is not modeled. Use a Seller Central override.</li>
+    </ul>
+    <p>When you have Revenue Calculator / Fee Preview, paste that fulfillment fee in the override field. That line becomes <span class="chip override">override</span>, and the 3.5% surcharge is 3.5% of the pasted number — not of our estimate.</p>
+
+    <h2>3.5% fuel surcharge is on fulfillment, not the sale price</h2>
+    <p>Since 17 April 2026, US (and Canada) FBA fulfillment fees are multiplied by 1.035. Amazon’s announcement said that averages about <strong>$0.17 per unit</strong> for US FBA, varying by size and dimensions. It is not 3.5% of the item price, and it is not a referral or storage fee. Buy with Prime (US) and Multi-Channel Fulfillment (US and Canada) picked up the same surcharge on 2 May 2026.</p>
+    <p>3.5% of a $24.99 sale would be about $0.87. That is the wrong base. The longer write-up is <a href="amazon-fba-fuel-surcharge-2026.html">Amazon FBA 3.5% fuel surcharge (2026)</a>.</p>
+
+    <h2>Worked example: $24.99 Home and Kitchen, $5.00 Fee Preview</h2>
+    <p>One unit, no shipping charged, no gift wrap, Professional plan not allocated, fuel on. Referral uses the official 15% Home and Kitchen row. Fulfillment is a pasted $5.00 override so the fuel dollars are 3.5% of a known fee, not of FeeTruth’s size grid.</p>
+    <table class="plain" data-example="amz-24.99-override-5">
+      <thead><tr><th>Line</th><th>Math</th><th>Amount</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Referral — Home and Kitchen</td><td>$24.99 × 0.15</td><td>$3.7485</td><td>verified</td></tr>
+        <tr><td>FBA fulfillment</td><td>Seller Central override</td><td>$5.00</td><td>override</td></tr>
+        <tr><td>Fuel &amp; logistics (3.5%)</td><td>$5.00 × 0.035</td><td>$0.175</td><td>override (rate official; dollars inherit the pasted fee)</td></tr>
+        <tr><td><strong>Amazon + surcharge</strong></td><td></td><td><strong>$8.9235</strong></td><td></td></tr>
+      </tbody>
+    </table>
+    <p>Same SKU with FeeTruth’s size/weight estimate (8 × 6 × 2 in, 0.55 lb → large standard, DIM 139) prices fulfillment at <strong>$4.20</strong> and fuel at <strong>$0.147</strong>. Treat those two dollars as a sketch until Fee Preview replaces them.</p>
+
+    <h2>Storage and peak (estimate)</h2>
+    <p>Storage is monthly and cubic-foot. Official public pages confirm the method, not the exact dollars we ship. FeeTruth’s optional allocation uses widely published 2026 figures: standard $0.78 / cu ft (Jan–Sep) or $2.40 (Oct–Dec); oversize $0.56 / $1.40. Holiday peak <em>fulfillment</em> adders for 15 Oct 2026 – 14 Jan 2027 are cited on the changelog and not modeled as extra dollars in the grid.</p>
+
+    <h2>Questions this calculator is built to answer</h2>
+    <h3>How do I calculate Amazon FBA fees in 2026?</h3>
+    <p>Add the official referral (and plan / media closing if they apply), then add fulfillment + 3.5% of that fulfillment fee. Use Seller Central Fee Preview for the fulfillment dollar. Size-weight calculators that skip the override are estimates.</p>
+    <h3>Is the 3.5% fuel surcharge on the sale price?</h3>
+    <p>No. Official announcement: calculated on fulfillment fees, not the sale price of the items.</p>
+    <h3>Did Amazon change referral percentages in 2026?</h3>
+    <p>The public sell.amazon.com/pricing table we fetched on 22 Aug 2026 still showed the long-standing category percentages. The 2026 letter we cite is about FBA fulfillment averages, not a new public referral-rate rewrite.</p>
+    <h3>Why does FeeTruth refuse to give one FBA take-rate?</h3>
+    <p>Referral is a category percent of price. Fulfillment is a size/weight/price-band dollar. Fuel is 3.5% of fulfillment. Storage is cubic-foot. Blending them hides which line is official and which line is a guess.</p>
+
+    <h2>Official sources</h2>
+    <ul>
+      <li><a href="https://sell.amazon.com/pricing">sell.amazon.com/pricing</a> — selling plans and public referral table</li>
+      <li><a href="https://sellingpartners.aboutamazon.com/update-to-u-s-referral-and-fulfillment-by-amazon-fees-for-2026">2026 US Referral and FBA update letter</a> — +$0.08/unit average, no new FBA fee types, 15 Jan 2026</li>
+      <li><a href="https://sellercentral.amazon.com/seller-forums/discussions/t/7cbc0233-ee5b-4359-978a-dee7cad5c6f4">Seller Central: Fuel and logistics-related surcharge</a> — 3.5% on fulfillment from 17 Apr 2026</li>
+      <li><a href="https://sell.amazon.com/blog/fba-fees-guide">FBA fees guide</a> (24 Jul 2026) — qualitative cost types; no dollar rate card</li>
+      <li><a href="../sources.html">FeeTruth sources</a> · <a href="../SOURCES.md">SOURCES.md</a> · <a href="../changelog.html">2026 changelog</a></li>
+    </ul>
+
+    <p style="margin-top:1.5rem">
+      <a class="btn" href="../index.html?tab=amazon&amp;override=5">Calculate this $24.99 example</a>
+    </p>
+    <p class="note">Free. No account. No email. The Amazon tab opens with a $5.00 fulfillment override so fuel is 3.5% of a known fee. Clear the override to see FeeTruth’s size/weight estimate.</p>
+
+    <aside class="cta">
+      <h2>FeeTruth Seller Workbook — $19 one-time</h2>
+      <p>
+        Optional paid file: a CSV template plus a how-to for the same itemized math as the free calculator, and notes on 2026 fee rules we actually cite.
+        Lifetime file access via Whop Files. Fee tables change; re-download when we post a changelog update. Not a subscription. The calculator stays free.
+      </p>
+      <p><a class="btn" data-checkout href="https://whop.com/checkout/plan_oC1FbrBQ9y2yp">Buy Seller Workbook — $19</a></p>
+    </aside>
+  </article>
+  <footer>
+    <p>Free calculator. No account. Not financial advice — confirm billed amounts in Amazon Seller Central. Page traffic uses Cloudflare Web Analytics. <a href="../index.html?tab=amazon">FeeTruth Amazon calculator</a> · <a href="../sources.html">Sources</a> · <a href="etsy-fee-calculator.html">Etsy fee calculator (2026)</a></p>
+    <p>Optional: <a data-checkout href="https://whop.com/checkout/plan_oC1FbrBQ9y2yp">FeeTruth Seller Workbook — $19 one-time</a> (CSV + guide; lifetime file access on Whop).</p>
+    <div class="analytics" id="analytics"></div>
+  </footer>
+  <script src="../js/fees.js"></script>
+  <script src="../js/app.js"></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "185a204e92a94cebb95cacd619e0b6a8"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

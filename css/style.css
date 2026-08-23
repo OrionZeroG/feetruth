@@ -87,6 +87,7 @@ footer {
 .analytics { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
 article h1 { font-family: var(--sans); font-size: 1.8rem; margin-bottom: 0.3rem; }
 article h2 { font-family: var(--sans); font-size: 1.25rem; margin-top: 1.6rem; }
+article h3 { font-family: var(--sans); font-size: 1.05rem; margin-top: 1.15rem; }
 article time, .meta { color: var(--muted); font-size: 0.9rem; }
 table.plain { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
 table.plain th, table.plain td { border-bottom: 1px solid var(--line); text-align: left; padding: 0.45rem 0.3rem; vertical-align: top; }
