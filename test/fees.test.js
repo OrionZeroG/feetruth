@@ -174,4 +174,141 @@ check("Amazon estimate vs override labeling unchanged", () => {
   assert.ok(!/ESTIMATE/i.test(fuelOv.note) || /override/i.test(fuelOv.note));
 });
 
+check("Amazon Individual $0.99 per item scales with quantity", () => {
+  const base = {
+    item: 20,
+    shipping: 0,
+    gift: 0,
+    category: "home_kitchen",
+    length: 8,
+    width: 6,
+    height: 2,
+    weightLb: 0.55,
+    fuel: false,
+    plan: "individual"
+  };
+  const one = amazonFees({ ...base, qty: 1 });
+  const three = amazonFees({ ...base, qty: 3 });
+  const planLine1 = one.lines.find((l) => l.name === "Individual per-item fee");
+  const planLine3 = three.lines.find((l) => l.name === "Individual per-item fee");
+  almost(planLine1.amount, 0.99, "individual fee qty=1");
+  almost(planLine3.amount, 2.97, "individual fee qty=3");
+  almost(planLine3.amount - planLine1.amount, 1.98, "two extra $0.99 units on plan line");
+});
+
+check("Amazon Professional plan allocation scales per unit and with quantity", () => {
+  const base = {
+    item: 24.99,
+    shipping: 0,
+    gift: 0,
+    category: "home_kitchen",
+    length: 8,
+    width: 6,
+    height: 2,
+    weightLb: 0.55,
+    fuel: false,
+    plan: "professional",
+    allocatePlan: true,
+    ordersMonth: 200
+  };
+  const one = amazonFees({ ...base, qty: 1 });
+  const two = amazonFees({ ...base, qty: 2 });
+  const perUnit = 39.99 / 200;
+  const plan1 = one.lines.find((l) => l.name === "Professional plan (allocated)");
+  const plan2 = two.lines.find((l) => l.name === "Professional plan (allocated)");
+  almost(plan1.amount, perUnit, "one unit allocation");
+  almost(plan2.amount, perUnit * 2, "two units allocation");
+  almost(plan2.amount - plan1.amount, perUnit, "extra unit adds one allocation share");
+});
+
+check("Etsy UK: GBP totals include Offsite Ads on txBase; listing/subs USD-only", () => {
+  const r = etsyFees({
+    region: "UK",
+    item: 48,
+    shipping: 6.5,
+    gift: 0,
+    tax: 0,
+    qty: 1,
+    ads: "15",
+    includeListing: true,
+    pattern: true,
+    plus: true,
+    allocateSubs: true,
+    ordersMonth: 40,
+    cogs: 14,
+    shipCost: 4.2
+  });
+  assert.strictEqual(r.currency, "GBP");
+  almost(r.txBase, 54.5, "txBase GBP");
+  const adsAmt = 54.5 * 0.15;
+  almost(r.totalFees, 3.5425 + 2.38 + adsAmt, "GBP fees = txn + proc + ads");
+  const txn = r.lines.find((l) => l.name.startsWith("Transaction fee"));
+  const proc = r.lines.find((l) => l.name.startsWith("Payment processing"));
+  const listing = r.lines.find((l) => l.name === "Listing fee");
+  const ads = r.lines.find((l) => l.name.startsWith("Offsite Ads"));
+  const subs = r.lines.find((l) => l.name.startsWith("Allocated Pattern"));
+  almost(txn.amount, 3.5425, "txn GBP");
+  almost(proc.amount, 2.38, "proc 4% + £0.20");
+  assert.strictEqual(txn.currency, "GBP");
+  assert.strictEqual(proc.currency, "GBP");
+  assert.strictEqual(ads.currency, "GBP");
+  assert.strictEqual(ads.status, "verified");
+  almost(ads.amount, adsAmt, "ads on GBP txBase");
+  assert.ok(ads.note.includes("$100 USD"), "cap disclosed in USD");
+  assert.ok(ads.note.includes("no FX"), "no invented FX");
+  assert.strictEqual(listing.currency, "USD");
+  assert.strictEqual(listing.status, "usd");
+  almost(listing.amount, 0.2, "listing shown in USD");
+  assert.strictEqual(subs.status, "usd");
+  almost(r.profit, 54.5 - r.totalFees - 14 - 4.2, "profit uses GBP fees incl ads");
+});
+
+check("Etsy UK Offsite Ads: large order marks cap estimate without zeroing ads", () => {
+  const r = etsyFees({
+    region: "UK",
+    item: 800,
+    shipping: 0,
+    gift: 0,
+    tax: 0,
+    qty: 1,
+    ads: "15",
+    includeListing: false
+  });
+  const ads = r.lines.find((l) => l.name.startsWith("Offsite Ads"));
+  almost(ads.amount, 800 * 0.15, "uncapped GBP ads (no FX for USD cap)");
+  assert.strictEqual(ads.status, "estimate");
+  assert.ok(ads.note.includes("processing-time rate"), "cap conversion disclosed");
+  almost(r.totalFees, 800 * 0.065 + (800 * 0.04 + 0.2) + 800 * 0.15, "ads in GBP total");
+});
+
+check("Etsy UK reverse pricing includes Offsite Ads in GBP solve", () => {
+  const { etsySolvePrice } = context.window.FeeTruth;
+  const input = {
+    region: "UK",
+    item: 48,
+    shipping: 6.5,
+    gift: 0,
+    tax: 0,
+    qty: 1,
+    ads: "15",
+    includeListing: false,
+    cogs: 14,
+    shipCost: 4.2
+  };
+  const be = etsySolvePrice(input, "breakeven");
+  const atBe = etsyFees({ ...input, item: be });
+  almost(atBe.profit, 0, "breakeven profit ~0 with ads", 0.01);
+  assert.strictEqual(atBe.currency, "GBP");
+  almost(atBe.lines.find((l) => l.name.startsWith("Offsite Ads")).amount, atBe.txBase * 0.15, "ads in reverse path");
+});
+
+check("Etsy US locked path unchanged after UK split", () => {
+  const r = etsyFees(lockedUsQty1);
+  assert.strictEqual(r.currency, "USD");
+  almost(r.totalFees, 5.6275, "US totalFees locked");
+  almost(r.profit, 30.6725, "US profit locked");
+  const ads15 = etsyFees({ ...lockedUsQty1, ads: "15" });
+  almost(ads15.lines.find((l) => l.name.startsWith("Offsite Ads")).amount, 54.5 * 0.15, "US ads still in total");
+});
+
 console.log("\n" + passed + " checks passed");

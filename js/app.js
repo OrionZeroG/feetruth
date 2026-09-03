@@ -28,12 +28,13 @@
   }
   function pct(n) { return (n * 100).toFixed(1) + "%"; }
 
-  function renderLines(tbody, lines) {
+  function renderLines(tbody, lines, defaultCur) {
     tbody.innerHTML = "";
     lines.forEach((line) => {
       const tr = document.createElement("tr");
       tr.className = "row-" + (line.status || "off");
-      tr.innerHTML = `<td><span class="chip ${line.status}">${line.status}</span>${line.name}<div class="note">${line.note || ""}</div></td><td class="amt">${money(line.amount)}</td>`;
+      const cur = line.currency || defaultCur || "USD";
+      tr.innerHTML = `<td><span class="chip ${line.status}">${line.status}</span>${line.name}<div class="note">${line.note || ""}</div></td><td class="amt">${money(line.amount, cur)}</td>`;
       tbody.appendChild(tr);
     });
   }
@@ -62,19 +63,19 @@
   function runEtsy(count) {
     const input = etsyInput();
     const r = FeeTruth.etsyFees(input);
-    renderLines(document.getElementById("e-lines"), r.lines);
-    document.getElementById("e-rev").textContent = money(r.revenue);
-    document.getElementById("e-fees").textContent = money(r.totalFees);
-    document.getElementById("e-profit").textContent = money(r.profit);
+    renderLines(document.getElementById("e-lines"), r.lines, r.currency);
+    document.getElementById("e-rev").textContent = money(r.revenue, r.currency);
+    document.getElementById("e-fees").textContent = money(r.totalFees, r.currency);
+    document.getElementById("e-profit").textContent = money(r.profit, r.currency);
     document.getElementById("e-margin").textContent = pct(r.margin);
     document.getElementById("e-profit").style.color = r.profit >= 0 ? "var(--ok)" : "var(--bad)";
     const be = FeeTruth.etsySolvePrice(input, "breakeven");
     const tm = Number(document.getElementById("e-target").value) / 100;
     const tp = FeeTruth.etsySolvePrice(input, "margin", tm);
-    document.getElementById("e-be").textContent = be == null ? "No solution" : money(be) + " list price";
-    document.getElementById("e-tp").textContent = tp == null ? "No solution" : money(tp) + " list price";
+    document.getElementById("e-be").textContent = be == null ? "No solution" : money(be, r.currency) + " list price";
+    document.getElementById("e-tp").textContent = tp == null ? "No solution" : money(tp, r.currency) + " list price";
     const note = document.getElementById("e-fx-note");
-    if (note) note.textContent = r.region === "UK" ? r.currencyNote : "";
+    if (note) note.textContent = r.currencyNote || "";
     if (count) bump("etsy");
   }
 
@@ -135,6 +136,16 @@
     if (count) bump("amazon");
   }
 
+  function syncEtsyRegionUi() {
+    const uk = document.getElementById("e-region").value === "UK";
+    document.getElementById("e-vat-wrap").hidden = !uk;
+    ["e-pattern", "e-plus", "e-alloc"].forEach((id) => {
+      const el = document.getElementById(id);
+      el.disabled = uk;
+      if (uk) el.checked = false;
+    });
+  }
+
   function showPanel(name) {
     document.querySelectorAll("[data-panel]").forEach((p) => {
       p.hidden = p.getAttribute("data-panel") !== name;
@@ -173,7 +184,8 @@
       etsyForm.addEventListener("submit", (e) => { e.preventDefault(); runEtsy(true); });
       etsyForm.addEventListener("change", () => { /* live optional */ });
       document.getElementById("e-region").addEventListener("change", () => {
-        document.getElementById("e-vat-wrap").hidden = document.getElementById("e-region").value !== "UK";
+        syncEtsyRegionUi();
+        runEtsy(false);
       });
     }
     if (amzForm) {
@@ -191,7 +203,10 @@
     document.querySelectorAll("[data-checkout]").forEach((el) => {
       el.addEventListener("click", () => bump("checkout"));
     });
-    if (document.getElementById("e-item")) runEtsy();
+    if (document.getElementById("e-item")) {
+      syncEtsyRegionUi();
+      runEtsy();
+    }
     if (document.getElementById("a-item")) runAmazon();
   }
 

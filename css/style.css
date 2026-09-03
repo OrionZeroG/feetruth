@@ -76,6 +76,7 @@ input[type="number"], input[type="text"], select {
 .chip.override { background: #d7e8ea; color: var(--accent); }
 .chip.off { background: #eeeae3; color: #888; }
 .chip.input { background: #e8e4f2; color: #3d3560; }
+.chip.usd { background: #eeeae3; color: #666; }
 .note { color: var(--muted); font-size: 0.8rem; }
 .solve { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; }
 .solve .box { background: #f7f3eb; border-radius: 8px; padding: 0.7rem 0.8rem; }
@@ -128,7 +129,7 @@ tr.row-estimate td.amt {
   font-weight: 400; font-style: italic; color: var(--warn);
 }
 tr.row-override td.amt { font-weight: 500; font-style: italic; color: var(--accent); }
-tr.row-input td.amt, tr.row-off td.amt { font-weight: 400; color: var(--muted); }
+tr.row-input td.amt, tr.row-off td.amt, tr.row-usd td.amt { font-weight: 400; color: var(--muted); }
 .est-subtotal, .totals .est-subtotal {
   background: #f7f1e4; color: var(--warn); font-style: italic; font-weight: 400;
   padding: 0.35rem 0.4rem; border-radius: 6px;
