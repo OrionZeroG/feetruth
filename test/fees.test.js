@@ -221,7 +221,7 @@ check("Amazon Professional plan allocation scales per unit and with quantity", (
   almost(plan2.amount - plan1.amount, perUnit, "extra unit adds one allocation share");
 });
 
-check("Etsy UK: GBP totals exclude USD listing/ads/subs; processing uses £", () => {
+check("Etsy UK: GBP totals include Offsite Ads on txBase; listing/subs USD-only", () => {
   const r = etsyFees({
     region: "UK",
     item: 48,
@@ -240,7 +240,8 @@ check("Etsy UK: GBP totals exclude USD listing/ads/subs; processing uses £", ()
   });
   assert.strictEqual(r.currency, "GBP");
   almost(r.txBase, 54.5, "txBase GBP");
-  almost(r.totalFees, 5.9225, "GBP fees = txn + proc only");
+  const adsAmt = 54.5 * 0.15;
+  almost(r.totalFees, 3.5425 + 2.38 + adsAmt, "GBP fees = txn + proc + ads");
   const txn = r.lines.find((l) => l.name.startsWith("Transaction fee"));
   const proc = r.lines.find((l) => l.name.startsWith("Payment processing"));
   const listing = r.lines.find((l) => l.name === "Listing fee");
@@ -250,17 +251,37 @@ check("Etsy UK: GBP totals exclude USD listing/ads/subs; processing uses £", ()
   almost(proc.amount, 2.38, "proc 4% + £0.20");
   assert.strictEqual(txn.currency, "GBP");
   assert.strictEqual(proc.currency, "GBP");
+  assert.strictEqual(ads.currency, "GBP");
+  assert.strictEqual(ads.status, "verified");
+  almost(ads.amount, adsAmt, "ads on GBP txBase");
+  assert.ok(ads.note.includes("$100 USD"), "cap disclosed in USD");
+  assert.ok(ads.note.includes("no FX"), "no invented FX");
   assert.strictEqual(listing.currency, "USD");
   assert.strictEqual(listing.status, "usd");
   almost(listing.amount, 0.2, "listing shown in USD");
-  assert.strictEqual(ads.status, "usd");
-  assert.strictEqual(ads.amount, 0, "ads not mixed into GBP total");
   assert.strictEqual(subs.status, "usd");
-  almost(r.profit, 30.3775, "profit GBP-only fees");
-  almost(r.margin, r.profit / r.revenue, "margin from GBP net");
+  almost(r.profit, 54.5 - r.totalFees - 14 - 4.2, "profit uses GBP fees incl ads");
 });
 
-check("Etsy UK reverse pricing stays in GBP (no USD lines in solve)", () => {
+check("Etsy UK Offsite Ads: large order marks cap estimate without zeroing ads", () => {
+  const r = etsyFees({
+    region: "UK",
+    item: 800,
+    shipping: 0,
+    gift: 0,
+    tax: 0,
+    qty: 1,
+    ads: "15",
+    includeListing: false
+  });
+  const ads = r.lines.find((l) => l.name.startsWith("Offsite Ads"));
+  almost(ads.amount, 800 * 0.15, "uncapped GBP ads (no FX for USD cap)");
+  assert.strictEqual(ads.status, "estimate");
+  assert.ok(ads.note.includes("processing-time rate"), "cap conversion disclosed");
+  almost(r.totalFees, 800 * 0.065 + (800 * 0.04 + 0.2) + 800 * 0.15, "ads in GBP total");
+});
+
+check("Etsy UK reverse pricing includes Offsite Ads in GBP solve", () => {
   const { etsySolvePrice } = context.window.FeeTruth;
   const input = {
     region: "UK",
@@ -269,15 +290,16 @@ check("Etsy UK reverse pricing stays in GBP (no USD lines in solve)", () => {
     gift: 0,
     tax: 0,
     qty: 1,
-    ads: "off",
-    includeListing: true,
+    ads: "15",
+    includeListing: false,
     cogs: 14,
     shipCost: 4.2
   };
   const be = etsySolvePrice(input, "breakeven");
   const atBe = etsyFees({ ...input, item: be });
-  almost(atBe.profit, 0, "breakeven profit ~0", 0.01);
+  almost(atBe.profit, 0, "breakeven profit ~0 with ads", 0.01);
   assert.strictEqual(atBe.currency, "GBP");
+  almost(atBe.lines.find((l) => l.name.startsWith("Offsite Ads")).amount, atBe.txBase * 0.15, "ads in reverse path");
 });
 
 check("Etsy US locked path unchanged after UK split", () => {

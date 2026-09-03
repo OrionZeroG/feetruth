@@ -139,14 +139,6 @@
   function syncEtsyRegionUi() {
     const uk = document.getElementById("e-region").value === "UK";
     document.getElementById("e-vat-wrap").hidden = !uk;
-    const ads = document.getElementById("e-ads");
-    ads.querySelectorAll("option").forEach((opt) => {
-      if (opt.value === "15" || opt.value === "12") {
-        opt.disabled = uk;
-        opt.hidden = uk;
-      }
-    });
-    if (uk && ads.value !== "off") ads.value = "off";
     ["e-pattern", "e-plus", "e-alloc"].forEach((id) => {
       const el = document.getElementById(id);
       el.disabled = uk;

@@ -38,9 +38,10 @@ const ETSY = {
  * Offsite Ads: % of that same order amount (item×qty + shipping + gift wrap),
  * capped at $100 USD. Toggle and cap behavior unchanged.
  * Listing: $0.20 per listed/renewed unit; multi-qty auto-renews $0.20 per additional unit sold.
- * Pattern/Plus: monthly overhead, allocated only if opted in (US only; USD).
- * UK: totals/net/margin/reverse use GBP only (transaction + processing + optional VAT on those).
- *       Listing, Offsite Ads, and Pattern/Plus are USD on Etsy’s schedule — shown separately, not summed (no FX rate).
+ * Pattern/Plus: monthly overhead, allocated only if opted in (US totals; USD excluded on UK).
+ * UK: GBP totals = transaction + processing + Offsite Ads (+ optional VAT on those GBP fees).
+ *       Offsite Ads % uses the same GBP txBase; the $100 USD cap is not converted (no FX) — line marked estimate when uncapped GBP may exceed the cap.
+ *       Listing and Pattern/Plus stay USD, shown separately, not summed into GBP net/margin.
  */
 function etsyFees(input) {
   const qty = Math.max(1, Math.floor(num(input.qty, 1)));
@@ -65,23 +66,40 @@ function etsyFees(input) {
 
   let adsRate = 0;
   let adsLabel = "Off";
-  if (region === "US" && input.ads === "15") {
+  if (input.ads === "15") {
     adsRate = ETSY.offsite.under10k;
     adsLabel = "15% (under $10k trailing 365-day)";
-  } else if (region === "US" && input.ads === "12") {
+  } else if (input.ads === "12") {
     adsRate = ETSY.offsite.over10k;
     adsLabel = "12% (ever at/above $10k trailing 365-day)";
   }
   const adsRaw = txBase * adsRate;
-  const ads = Math.min(adsRaw, ETSY.offsite.capUsd);
+  let ads;
+  let adsStatus;
+  let adsNote;
+  if (region === "US") {
+    ads = Math.min(adsRaw, ETSY.offsite.capUsd);
+    adsStatus = adsRate ? "verified" : "off";
+    adsNote = adsRate ? `Capped at $${ETSY.offsite.capUsd} per order` : "Not applied";
+  } else {
+    ads = adsRaw;
+    if (adsRate) {
+      adsStatus = adsRaw > ETSY.offsite.capUsd ? "estimate" : "verified";
+      adsNote = `On GBP order total (same base as transaction fee). Official cap is $${ETSY.offsite.capUsd} USD per order — Etsy converts at processing-time rate; cap not applied here (no FX in calculator)`;
+      if (adsRaw > ETSY.offsite.capUsd) adsNote += " — GBP line may overstate fees when the USD cap applies";
+    } else {
+      adsStatus = "off";
+      adsNote = "Not applied";
+    }
+  }
 
   const monthly = region === "US" ? ((input.pattern ? ETSY.patternUsd : 0) + (input.plus ? ETSY.plusUsd : 0)) : 0;
   const ordersMonth = Math.max(1, num(input.ordersMonth, 1));
   const overhead = region === "US" && input.allocateSubs ? monthly / ordersMonth : 0;
 
   const vatOnFeesRate = region === "UK" && input.vatOnFees ? num(input.vatRate, 0.20) : 0;
-  const gbpServiceFees = transaction + processing;
-  const usdServiceFees = listing + ads + overhead;
+  const gbpServiceFees = transaction + processing + ads;
+  const usdServiceFees = listing + overhead;
   const etsyServiceFees = region === "UK" ? gbpServiceFees : (usdServiceFees + gbpServiceFees);
   const vatOnFees = region === "UK" ? gbpServiceFees * vatOnFeesRate : 0;
 
@@ -94,8 +112,8 @@ function etsyFees(input) {
     ? [
       { name: "Transaction fee (6.5%)", amount: transaction, currency: "GBP", status: "verified", note: "On item×qty + shipping + gift wrap (order-level ship/wrap)" },
       { name: `Payment processing (${proc.label})`, amount: processing, currency: "GBP", status: "verified", note: "On item×qty + shipping + gift wrap + tax (order-level ship/wrap/tax)" },
+      { name: `Offsite Ads (${adsLabel})`, amount: ads, currency: "GBP", status: adsStatus, note: adsNote },
       { name: "Listing fee", amount: listing, currency: "USD", status: listing ? "usd" : "off", note: listing ? `${listingUnits} × $0.20 USD · ${usdExcludedNote}` : "Off" },
-      { name: `Offsite Ads (${adsLabel})`, amount: 0, currency: "USD", status: input.ads !== "off" ? "usd" : "off", note: input.ads !== "off" ? `Offsite Ads are USD-only ($${ETSY.offsite.capUsd} cap). Switch to US region to model attributed ads in totals.` : "Not applied" },
       { name: "Allocated Pattern / Plus", amount: overhead, currency: "USD", status: (input.pattern || input.plus) && input.allocateSubs ? "usd" : "off", note: (input.pattern || input.plus) && input.allocateSubs ? `Pattern/Plus are USD subscriptions · ${usdExcludedNote}` : "Overhead not allocated" },
       { name: "VAT on Etsy fees (UK)", amount: vatOnFees, currency: "GBP", status: vatOnFees ? "estimate" : "off", note: vatOnFees ? `${(vatOnFeesRate * 100).toFixed(0)}% on GBP Etsy service fees — confirm with your tax advisor / Etsy statement` : "Off" },
       { name: "COGS", amount: cogs * qty, currency: "GBP", status: "input" },
@@ -105,7 +123,7 @@ function etsyFees(input) {
       { name: "Listing fee", amount: listing, currency: "USD", status: "verified", note: `${listingUnits} × $0.20 USD` },
       { name: "Transaction fee (6.5%)", amount: transaction, currency: "USD", status: "verified", note: "On item×qty + shipping + gift wrap (order-level ship/wrap)" },
       { name: `Payment processing (${proc.label})`, amount: processing, currency: "USD", status: "verified", note: "On item×qty + shipping + gift wrap + tax (order-level ship/wrap/tax)" },
-      { name: `Offsite Ads (${adsLabel})`, amount: ads, currency: "USD", status: adsRate ? "verified" : "off", note: adsRate ? `Capped at $${ETSY.offsite.capUsd} per order` : "Not applied" },
+      { name: `Offsite Ads (${adsLabel})`, amount: ads, currency: "USD", status: adsStatus, note: adsNote },
       { name: "Allocated Pattern / Plus", amount: overhead, currency: "USD", status: overhead ? "verified" : "off", note: overhead ? `$${monthly}/mo ÷ ${ordersMonth} orders` : "Overhead not allocated" },
       { name: "VAT on Etsy fees (UK)", amount: vatOnFees, currency: "USD", status: "off", note: "Off" },
       { name: "COGS", amount: cogs * qty, currency: "USD", status: "input" },
@@ -116,7 +134,7 @@ function etsyFees(input) {
     region,
     currency,
     currencyNote: region === "UK"
-      ? "GBP totals include transaction + processing (+ optional VAT on those fees). Listing, Offsite Ads, and Pattern/Plus are USD on Etsy’s schedule — shown separately, not summed into GBP net/margin."
+      ? "GBP totals include transaction, processing, and Offsite Ads (+ optional VAT). Listing and Pattern/Plus are USD on Etsy’s schedule — shown separately, not summed (no FX rate). The $100 USD Offsite Ads cap is disclosed on that line; Etsy converts it at processing time."
       : "",
     lines,
     revenue,
