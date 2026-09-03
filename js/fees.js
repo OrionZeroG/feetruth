@@ -38,7 +38,9 @@ const ETSY = {
  * Offsite Ads: % of that same order amount (item×qty + shipping + gift wrap),
  * capped at $100 USD. Toggle and cap behavior unchanged.
  * Listing: $0.20 per listed/renewed unit; multi-qty auto-renews $0.20 per additional unit sold.
- * Pattern/Plus: monthly overhead, allocated only if opted in.
+ * Pattern/Plus: monthly overhead, allocated only if opted in (US only; USD).
+ * UK: totals/net/margin/reverse use GBP only (transaction + processing + optional VAT on those).
+ *       Listing, Offsite Ads, and Pattern/Plus are USD on Etsy’s schedule — shown separately, not summed (no FX rate).
  */
 function etsyFees(input) {
   const qty = Math.max(1, Math.floor(num(input.qty, 1)));
@@ -50,6 +52,7 @@ function etsyFees(input) {
   const shipCost = num(input.shipCost);
   const region = input.region === "UK" ? "UK" : "US";
   const proc = ETSY.processing[region];
+  const currency = region === "UK" ? "GBP" : "USD";
 
   const listingUnits = input.includeListing === false ? 0 : qty;
   const listing = listingUnits * ETSY.listingUsd;
@@ -62,43 +65,60 @@ function etsyFees(input) {
 
   let adsRate = 0;
   let adsLabel = "Off";
-  if (input.ads === "15") {
+  if (region === "US" && input.ads === "15") {
     adsRate = ETSY.offsite.under10k;
     adsLabel = "15% (under $10k trailing 365-day)";
-  } else if (input.ads === "12") {
+  } else if (region === "US" && input.ads === "12") {
     adsRate = ETSY.offsite.over10k;
     adsLabel = "12% (ever at/above $10k trailing 365-day)";
   }
   const adsRaw = txBase * adsRate;
   const ads = Math.min(adsRaw, ETSY.offsite.capUsd);
 
-  const monthly = (input.pattern ? ETSY.patternUsd : 0) + (input.plus ? ETSY.plusUsd : 0);
+  const monthly = region === "US" ? ((input.pattern ? ETSY.patternUsd : 0) + (input.plus ? ETSY.plusUsd : 0)) : 0;
   const ordersMonth = Math.max(1, num(input.ordersMonth, 1));
-  const overhead = input.allocateSubs ? monthly / ordersMonth : 0;
+  const overhead = region === "US" && input.allocateSubs ? monthly / ordersMonth : 0;
 
   const vatOnFeesRate = region === "UK" && input.vatOnFees ? num(input.vatRate, 0.20) : 0;
-  const etsyServiceFees = listing + transaction + processing + ads + overhead;
-  const vatOnFees = etsyServiceFees * vatOnFeesRate;
+  const gbpServiceFees = transaction + processing;
+  const usdServiceFees = listing + ads + overhead;
+  const etsyServiceFees = region === "UK" ? gbpServiceFees : (usdServiceFees + gbpServiceFees);
+  const vatOnFees = region === "UK" ? gbpServiceFees * vatOnFeesRate : 0;
 
   const revenue = txBase;
   const totalFees = etsyServiceFees + vatOnFees;
   const profit = revenue - totalFees - cogs * qty - shipCost * qty;
 
+  const usdExcludedNote = "USD — shown for reference; not included in GBP total (no FX rate in calculator)";
+  const lines = region === "UK"
+    ? [
+      { name: "Transaction fee (6.5%)", amount: transaction, currency: "GBP", status: "verified", note: "On item×qty + shipping + gift wrap (order-level ship/wrap)" },
+      { name: `Payment processing (${proc.label})`, amount: processing, currency: "GBP", status: "verified", note: "On item×qty + shipping + gift wrap + tax (order-level ship/wrap/tax)" },
+      { name: "Listing fee", amount: listing, currency: "USD", status: listing ? "usd" : "off", note: listing ? `${listingUnits} × $0.20 USD · ${usdExcludedNote}` : "Off" },
+      { name: `Offsite Ads (${adsLabel})`, amount: 0, currency: "USD", status: input.ads !== "off" ? "usd" : "off", note: input.ads !== "off" ? `Offsite Ads are USD-only ($${ETSY.offsite.capUsd} cap). Switch to US region to model attributed ads in totals.` : "Not applied" },
+      { name: "Allocated Pattern / Plus", amount: overhead, currency: "USD", status: (input.pattern || input.plus) && input.allocateSubs ? "usd" : "off", note: (input.pattern || input.plus) && input.allocateSubs ? `Pattern/Plus are USD subscriptions · ${usdExcludedNote}` : "Overhead not allocated" },
+      { name: "VAT on Etsy fees (UK)", amount: vatOnFees, currency: "GBP", status: vatOnFees ? "estimate" : "off", note: vatOnFees ? `${(vatOnFeesRate * 100).toFixed(0)}% on GBP Etsy service fees — confirm with your tax advisor / Etsy statement` : "Off" },
+      { name: "COGS", amount: cogs * qty, currency: "GBP", status: "input" },
+      { name: "Your shipping / fulfillment cost", amount: shipCost * qty, currency: "GBP", status: "input" }
+    ]
+    : [
+      { name: "Listing fee", amount: listing, currency: "USD", status: "verified", note: `${listingUnits} × $0.20 USD` },
+      { name: "Transaction fee (6.5%)", amount: transaction, currency: "USD", status: "verified", note: "On item×qty + shipping + gift wrap (order-level ship/wrap)" },
+      { name: `Payment processing (${proc.label})`, amount: processing, currency: "USD", status: "verified", note: "On item×qty + shipping + gift wrap + tax (order-level ship/wrap/tax)" },
+      { name: `Offsite Ads (${adsLabel})`, amount: ads, currency: "USD", status: adsRate ? "verified" : "off", note: adsRate ? `Capped at $${ETSY.offsite.capUsd} per order` : "Not applied" },
+      { name: "Allocated Pattern / Plus", amount: overhead, currency: "USD", status: overhead ? "verified" : "off", note: overhead ? `$${monthly}/mo ÷ ${ordersMonth} orders` : "Overhead not allocated" },
+      { name: "VAT on Etsy fees (UK)", amount: vatOnFees, currency: "USD", status: "off", note: "Off" },
+      { name: "COGS", amount: cogs * qty, currency: "USD", status: "input" },
+      { name: "Your shipping / fulfillment cost", amount: shipCost * qty, currency: "USD", status: "input" }
+    ];
+
   return {
     region,
+    currency,
     currencyNote: region === "UK"
-      ? "Listing and subscriptions are billed in USD. Processing is in GBP on the official table. Mixed-currency result is approximate unless you convert listing/subs to GBP."
-      : "USD",
-    lines: [
-      { name: "Listing fee", amount: listing, status: "verified", note: `${listingUnits} × $0.20 USD` },
-      { name: "Transaction fee (6.5%)", amount: transaction, status: "verified", note: "On item×qty + shipping + gift wrap (order-level ship/wrap)" },
-      { name: `Payment processing (${proc.label})`, amount: processing, status: "verified", note: "On item×qty + shipping + gift wrap + tax (order-level ship/wrap/tax)" },
-      { name: `Offsite Ads (${adsLabel})`, amount: ads, status: adsRate ? "verified" : "off", note: adsRate ? `Capped at $${ETSY.offsite.capUsd} per order` : "Not applied" },
-      { name: "Allocated Pattern / Plus", amount: overhead, status: overhead ? "verified" : "off", note: overhead ? `$${monthly}/mo ÷ ${ordersMonth} orders` : "Overhead not allocated" },
-      { name: "VAT on Etsy fees (UK)", amount: vatOnFees, status: vatOnFees ? "estimate" : "off", note: vatOnFees ? `${(vatOnFeesRate * 100).toFixed(0)}% on Etsy service fees — confirm with your tax advisor / Etsy statement` : "Off" },
-      { name: "COGS", amount: cogs * qty, status: "input" },
-      { name: "Your shipping / fulfillment cost", amount: shipCost * qty, status: "input" }
-    ],
+      ? "GBP totals include transaction + processing (+ optional VAT on those fees). Listing, Offsite Ads, and Pattern/Plus are USD on Etsy’s schedule — shown separately, not summed into GBP net/margin."
+      : "",
+    lines,
     revenue,
     totalFees,
     profit,
@@ -293,9 +313,10 @@ function amazonFees(input) {
   const storage = cuft * storageRate * months;
 
   const planMonthly = input.plan === "individual" ? 0 : AMZ.proMonthly;
-  const ordersMonth = Math.max(1, num(input.ordersMonth, 1));
-  const planAlloc = input.allocatePlan ? planMonthly / ordersMonth : 0;
-  const individualFee = input.plan === "individual" ? AMZ.individualPerItem : 0;
+  const unitsMonth = Math.max(1, num(input.ordersMonth, 1));
+  const planPerUnit = input.plan === "professional" && input.allocatePlan ? planMonthly / unitsMonth : 0;
+  const planAlloc = planPerUnit * qty;
+  const individualFee = input.plan === "individual" ? AMZ.individualPerItem * qty : 0;
 
   const revenue = totalPrice * qty;
   const referral = ref.fee * qty;
@@ -325,7 +346,7 @@ function amazonFees(input) {
       { name: "FBA fulfillment", amount: fulfillment, status: fulfillStatus, note: fulfill.detail },
       { name: "Fuel & logistics surcharge (3.5%)", amount: fuelTot, status: fuelStatus, note: fuelNote },
       { name: "Monthly storage (allocated)", amount: storageTot, status: storageTot ? "estimate" : "off", note: storageTot ? `${cuft.toFixed(4)} cu ft × $${storageRate.toFixed(2)} × ${months} mo` : "Off" },
-      { name: input.plan === "individual" ? "Individual per-item fee" : "Professional plan (allocated)", amount: planAlloc + individualFee, status: (planAlloc + individualFee) ? "verified" : "off" },
+      { name: input.plan === "individual" ? "Individual per-item fee" : "Professional plan (allocated)", amount: planAlloc + individualFee, status: (planAlloc + individualFee) ? "verified" : "off", note: input.plan === "individual" && individualFee ? `${qty} × $${AMZ.individualPerItem}` : (planAlloc ? `$${planMonthly}/mo ÷ ${unitsMonth} units/mo × ${qty}` : "") },
       { name: "PPC / ads (your number)", amount: ppcTot, status: ppcTot ? "input" : "off" },
       { name: "COGS", amount: cogsTot, status: "input" }
     ],
