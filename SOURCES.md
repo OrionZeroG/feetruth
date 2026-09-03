@@ -76,7 +76,7 @@ Status key:
 ### UK VAT on Etsy service fees — ESTIMATE (optional toggle)
 
 - **Rule:** UK VAT (typically 20%) may apply to Etsy service fees. We did not independently fetch an official VAT-on-fees schedule.
-- **Logic:** if UK + toggle: `vat = (listing + transaction + processing + ads + allocatedSubs) * 0.20`.
+- **Logic:** if UK + toggle: `vat = (transaction + processing + ads) * 0.20` on GBP service fees. Listing and Pattern/Plus are USD-billed and excluded from the GBP total (no FX in the calculator). US methodology unchanged.
 - **Why estimate:** not confirmed on a fetched official page in this build.
 - **Last verified:** not independently verified 22 Aug 2026.
 
